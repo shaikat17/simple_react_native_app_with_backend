@@ -1,14 +1,18 @@
 import { NavigationContainer } from '@react-navigation/native';
-
+import {
+  SafeAreaProvider,
+} from 'react-native-safe-area-context';
 
 import RootNavigation from './Navigations';
 
 
 export default function App() {
   return (
-    <NavigationContainer>
+    <SafeAreaProvider>
+      <NavigationContainer>
       <RootNavigation />
     </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
 
