@@ -5,6 +5,7 @@ import colors from 'colors'
 import morgan from 'morgan'
 import express from 'express'
 import connectDB from './config/db.js'
+import authRouter from './routes/authRoutes.js'
 
 // dot env
 dotenv.config()
@@ -20,12 +21,7 @@ app.use(express.json())
 app.use(morgan('dev'))
 
 // Routes
-app.get('/', (req, res) => {
-    res.status(200).json({
-        success: true,
-        message: 'Welcome to full stack react native app'
-    })
-})
+app.use('/api/v1/auth', authRouter)
 
 // PORT
 const PORT = process.env.PORT || 8080
