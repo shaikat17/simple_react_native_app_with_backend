@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, Alert } from 'react-native'
 import { useState } from "react";
+import axios from 'axios';
 import InputField from '../../components/forms/InputField';
 import SubmitButton from '../../components/forms/SubmitButton';
 const Login = ({ navigation }) => {
@@ -12,7 +13,7 @@ const Login = ({ navigation }) => {
 
     // functions
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     try {
       setLoading(true);
       if (
@@ -24,8 +25,14 @@ const Login = ({ navigation }) => {
           return
       }
       setLoading(false);
-      console.log(userInformation);
+      const { data } = await axios.post(
+        "http://192.168.1.10:5000/api/v1/auth/login",
+        { ...userInformation }
+      );
+      console.log(data)
+      alert(data && data.message);
     } catch (error) {
+      alert(error.response.data.message);
       setLoading(false);
       console.log("🚀 ~ handleSubmit ~ error:", error);
     }

@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet, TextInput, Alert } from "react-native";
+import axios from "axios";
 import { useState } from "react";
 import InputField from "../../components/forms/InputField";
 import SubmitButton from "../../components/forms/SubmitButton";
@@ -15,7 +16,7 @@ const Register = ({ navigation }) => {
 
   // functions
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     try {
       setLoading(true);
       if (
@@ -28,8 +29,16 @@ const Register = ({ navigation }) => {
         return;
       }
       setLoading(false);
-      console.log(userInformation);
+      const { data } = await axios.post(
+        "http://192.168.1.10:5000/api/v1/auth/register",
+        { ...userInformation }
+      );
+      console.log(data)
+      alert(data && data.message);
+      navigation.navigate('Login')
     } catch (error) {
+
+      alert(error.response.data.message);
       setLoading(false);
       console.log("🚀 ~ handleSubmit ~ error:", error);
     }
@@ -67,7 +76,13 @@ const Register = ({ navigation }) => {
         handleSubmit={handleSubmit}
       />
       <Text style={styles.subTitle}>
-        Already have an account? <Text onPress={() => navigation.navigate('Login')} style={styles.linkText}>Login</Text>
+        Already have an account?{" "}
+        <Text
+          onPress={() => navigation.navigate("Login")}
+          style={styles.linkText}
+        >
+          Login
+        </Text>
       </Text>
       {/* <Text>{JSON.stringify(userInformation)}</Text> */}
     </View>

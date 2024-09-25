@@ -43,7 +43,7 @@ const registerConltroller = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: "Registration is successful.",
+      message: "Registration is successful. Please Login.",
       savedUser,
     });
   } catch (error) {
@@ -56,6 +56,8 @@ const registerConltroller = async (req, res) => {
   }
 };
 
+
+// Login Controller Function
 const loginController = async (req, res) => {
   try {
     let { email, password } = req.body;
