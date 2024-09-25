@@ -1,25 +1,21 @@
-import { View, Text, StyleSheet, TextInput, Alert } from "react-native";
+import { View, Text, StyleSheet, Alert } from 'react-native'
 import { useState } from "react";
-import InputField from "../../components/forms/InputField";
-import SubmitButton from "../../components/forms/SubmitButton";
-
-const Register = () => {
-  // states
+import InputField from '../../components/forms/InputField';
+import SubmitButton from '../../components/forms/SubmitButton';
+const Login = () => {
+    // states
   const [userInformation, setUserInformation] = useState({
-    name: "",
     email: "",
     password: "",
   });
+    const [loading, setLoading] = useState(false)
 
-  const [loading, setLoading] = useState(false);
-
-  // functions
+    // functions
 
   const handleSubmit = () => {
     try {
       setLoading(true);
       if (
-        !userInformation.name ||
         !userInformation.email ||
         !userInformation.password
       ) {
@@ -34,18 +30,13 @@ const Register = () => {
       console.log("🚀 ~ handleSubmit ~ error:", error);
     }
   };
-
+    
+    
   return (
     <View style={styles.content}>
       <Text style={styles.Pagetitle}>Register</Text>
       <View style={{ marginHorizontal: 20 }}>
-        <InputField
-          lable={"name"}
-          keyboardType={"text"}
-          autoComplete={"name"}
-          value={userInformation.name}
-          setValue={setUserInformation}
-        />
+        
         <InputField
           lable={"email"}
           keyboardType={"email-address"}
@@ -62,32 +53,32 @@ const Register = () => {
         />
       </View>
       <SubmitButton
-        btnTitle={"Register"}
+        btnTitle={"Login"}
         loading={loading}
         handleSubmit={handleSubmit}
           />
-          <Text style={styles.linkText}>Already have an account? </Text>
+          <Text style={styles.linkText}>Don't have an account? </Text>
       {/* <Text>{JSON.stringify(userInformation)}</Text> */}
     </View>
-  );
-};
-export default Register;
+  )
+}
+export default Login
 
 const styles = StyleSheet.create({
-  content: {
-    flex: 1,
-    justifyContent: "center",
-    backgroundColor: "#e1d5c9",
-  },
-  Pagetitle: {
-    fontSize: 40,
-    fontWeight: "bold",
-    textAlign: "center",
-    color: "#1e2225",
-    marginBottom: 20,
+    content: {
+      flex: 1,
+      justifyContent: "center",
+      backgroundColor: "#e1d5c9",
     },
-    linkText: {
-        fontSize: 20,
-        textAlign: 'center'
-  }
-});
+    Pagetitle: {
+      fontSize: 40,
+      fontWeight: "bold",
+      textAlign: "center",
+      color: "#1e2225",
+      marginBottom: 20,
+      },
+      linkText: {
+          fontSize: 20,
+          textAlign: 'center'
+    }
+  });
