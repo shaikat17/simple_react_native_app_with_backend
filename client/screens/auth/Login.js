@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, Alert } from 'react-native'
 import { useState } from "react";
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import InputField from '../../components/forms/InputField';
 import SubmitButton from '../../components/forms/SubmitButton';
 const Login = ({ navigation }) => {
@@ -29,7 +30,8 @@ const Login = ({ navigation }) => {
         "http://192.168.1.10:5000/api/v1/auth/login",
         { ...userInformation }
       );
-      console.log(data)
+      // store on local storage
+      await AsyncStorage.setItem('@auth', JSON.stringify(data))
       alert(data && data.message);
     } catch (error) {
       alert(error.response.data.message);
