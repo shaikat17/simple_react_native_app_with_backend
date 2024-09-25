@@ -1,4 +1,5 @@
 import { hashPass, matchPass } from "../helpers/authHelper.js";
+import { createToken } from "../helpers/jwt.js";
 import { User } from "../models/userModel.js";
 
 const registerConltroller = async (req, res) => {
@@ -94,13 +95,16 @@ const loginController = async (req, res) => {
         message: "Opps! Email or Password is incorrect.",
       });
     }
+      //   jwt token
+      const token = await createToken(user)
 
     //   undefined password
       user.password = undefined
     return res.status(200).json({
       success: false,
       message: "Login is SuccessFull",
-      user,
+        user,
+      token
     });
   } catch (error) {
     console.log("🚀 ~ loginController ~ error:", error);
