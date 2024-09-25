@@ -4,7 +4,10 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import InputField from '../../components/forms/InputField';
 import SubmitButton from '../../components/forms/SubmitButton';
+import { useAuthContext } from '../../context/authContext';
 const Login = ({ navigation }) => {
+  // global state
+  const [state, setState] = useAuthContext()
     // states
   const [userInformation, setUserInformation] = useState({
     email: "",
@@ -27,12 +30,14 @@ const Login = ({ navigation }) => {
       }
       setLoading(false);
       const { data } = await axios.post(
-        "http://192.168.1.10:5000/api/v1/auth/login",
+        "/auth/login",
         { ...userInformation }
       );
+      setState(data)
       // store on local storage
       await AsyncStorage.setItem('@auth', JSON.stringify(data))
       alert(data && data.message);
+      navigation.navigate('Home')
     } catch (error) {
       alert(error.response.data.message);
       setLoading(false);
