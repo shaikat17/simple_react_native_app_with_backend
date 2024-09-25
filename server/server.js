@@ -4,9 +4,13 @@ import dotenv from 'dotenv'
 import colors from 'colors'
 import morgan from 'morgan'
 import express from 'express'
+import connectDB from './config/db.js'
 
 // dot env
 dotenv.config()
+
+// MONGODB Connection
+connectDB()
 
 const app = express()
 
@@ -27,5 +31,5 @@ app.get('/', (req, res) => {
 const PORT = process.env.PORT || 8080
 
 app.listen(PORT, () => {
-    console.log('Server is running on port ', PORT)
+    console.log('Server is running on port '.bgGreen.white, PORT.bgGreen.white)
 })
