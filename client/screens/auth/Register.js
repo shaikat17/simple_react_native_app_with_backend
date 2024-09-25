@@ -3,7 +3,7 @@ import { useState } from "react";
 import InputField from "../../components/forms/InputField";
 import SubmitButton from "../../components/forms/SubmitButton";
 
-const Register = () => {
+const Register = ({ navigation }) => {
   // states
   const [userInformation, setUserInformation] = useState({
     name: "",
@@ -23,9 +23,9 @@ const Register = () => {
         !userInformation.email ||
         !userInformation.password
       ) {
-          Alert.alert("Opss!!!", "All field must be filled.");
-          setLoading(false)
-          return
+        Alert.alert("Opss!!!", "All field must be filled.");
+        setLoading(false);
+        return;
       }
       setLoading(false);
       console.log(userInformation);
@@ -65,8 +65,10 @@ const Register = () => {
         btnTitle={"Register"}
         loading={loading}
         handleSubmit={handleSubmit}
-          />
-          <Text style={styles.linkText}>Already have an account? </Text>
+      />
+      <Text style={styles.subTitle}>
+        Already have an account? <Text onPress={() => navigation.navigate('Login')} style={styles.linkText}>Login</Text>
+      </Text>
       {/* <Text>{JSON.stringify(userInformation)}</Text> */}
     </View>
   );
@@ -85,9 +87,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#1e2225",
     marginBottom: 20,
-    },
-    linkText: {
-        fontSize: 20,
-        textAlign: 'center'
-  }
+  },
+  subTitle: {
+    fontSize: 20,
+    textAlign: "center",
+  },
+  linkText: {
+    color: "#e81414db",
+  },
 });

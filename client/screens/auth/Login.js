@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Alert } from 'react-native'
 import { useState } from "react";
 import InputField from '../../components/forms/InputField';
 import SubmitButton from '../../components/forms/SubmitButton';
-const Login = () => {
+const Login = ({ navigation }) => {
     // states
   const [userInformation, setUserInformation] = useState({
     email: "",
@@ -34,7 +34,7 @@ const Login = () => {
     
   return (
     <View style={styles.content}>
-      <Text style={styles.Pagetitle}>Register</Text>
+      <Text style={styles.Pagetitle}>Login</Text>
       <View style={{ marginHorizontal: 20 }}>
         
         <InputField
@@ -57,7 +57,7 @@ const Login = () => {
         loading={loading}
         handleSubmit={handleSubmit}
           />
-          <Text style={styles.linkText}>Don't have an account? </Text>
+          <Text style={styles.subTitle}>Don't have an account? <Text style={styles.linkText} onPress={() => navigation.navigate('Register')}>Register</Text></Text>
       {/* <Text>{JSON.stringify(userInformation)}</Text> */}
     </View>
   )
@@ -77,8 +77,11 @@ const styles = StyleSheet.create({
       color: "#1e2225",
       marginBottom: 20,
       },
+      subTitle: {
+        fontSize: 20,
+        textAlign: "center",
+      },
       linkText: {
-          fontSize: 20,
-          textAlign: 'center'
-    }
+        color: "#e81414db",
+      },
   });
