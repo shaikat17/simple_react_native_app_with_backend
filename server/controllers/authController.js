@@ -118,4 +118,41 @@ const loginController = async (req, res) => {
   }
 };
 
-export { registerConltroller, loginController };
+// update user controller
+const updateController = async (req, res) => {
+  try {
+    const { name, email } = req.body;
+    if (!name) {
+      return res.status(400).json({
+        success: false,
+        message: "name is required",
+      });
+    }
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "email is required",
+      });
+    }
+    
+    const user = await User.findOneAndUpdate(
+      { email },
+      { name, email },
+      { new: true }
+    );
+    res.status(200).json({
+      success: true,
+      message: "User information updated successfully",
+      user,
+    });
+  } catch (error) {
+    console.log("🚀 ~ updateController ~ error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Opps! Something bad happened.",
+      error,
+    });
+  }
+};  
+
+export { registerConltroller, loginController, updateController };

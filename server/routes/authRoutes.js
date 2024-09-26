@@ -1,5 +1,5 @@
 import express from "express"
-import { loginController, registerConltroller } from "../controllers/authController.js"
+import { loginController, registerConltroller, updateController } from "../controllers/authController.js"
 
 // Router Object
 const authRouter = express.Router()
@@ -8,6 +8,8 @@ const authRouter = express.Router()
 authRouter.post('/register', registerConltroller)
 
 authRouter.post('/login', loginController)
+
+authRouter.post('/update', updateController)
 
 
 export default authRouter
