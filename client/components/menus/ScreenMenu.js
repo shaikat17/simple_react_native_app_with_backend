@@ -11,7 +11,7 @@ import Account from "../../screens/Account";
 
 const ScreenMenu = () => {
   // global state
-  const [state] = useAuthContext();
+  const { state } = useAuthContext();
 
   const Stack = createNativeStackNavigator();
 

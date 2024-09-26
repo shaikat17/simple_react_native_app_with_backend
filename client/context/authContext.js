@@ -27,7 +27,7 @@ const AuthProvider = ({ children }) => {
     loadLoaclStorageData();
   }, []);
     
-    return <AuthContext.Provider value={[state, setState]}>
+    return <AuthContext.Provider value={{state, setState}}>
         {children}
     </AuthContext.Provider>
 }

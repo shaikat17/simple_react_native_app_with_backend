@@ -6,7 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const HeaderMenu = () => {
     // global context
-    const [state, setState] = useAuthContext()
+  const { state, setState } = useAuthContext()
 
     // logout
     const handleLogout = async () => {

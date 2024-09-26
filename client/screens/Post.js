@@ -10,8 +10,11 @@ import { useState } from "react";
 import FooterMenu from "../components/menus/FooterMenu";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import authFetch from "../utils/authFetch";
+import { usePostContext } from "../context/postContext";
 
 const Post = ({ navigation }) => {
+  // global state
+  const { setAllPosts } = usePostContext();
     // local state
   const [loading, setLoading] = useState(false);
   const [postInformation, setPostInformation] = useState({
@@ -30,7 +33,8 @@ const Post = ({ navigation }) => {
                 setLoading(false)
                 return
             }
-            const { data } = await authFetch.post('/posts/create-post', postInformation)
+          const { data } = await authFetch.post('/posts/create-post', postInformation)
+          setAllPosts(prev => [data.post, ...prev])
             alert(data.message)
             setLoading(false)
             navigation.navigate('Home')

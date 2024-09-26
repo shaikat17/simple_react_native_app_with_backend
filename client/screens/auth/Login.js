@@ -7,7 +7,7 @@ import SubmitButton from '../../components/forms/SubmitButton';
 import { useAuthContext } from '../../context/authContext';
 const Login = ({ navigation }) => {
   // global state
-  const [state, setState] = useAuthContext()
+  const { state, setState } = useAuthContext()
     // states
   const [userInformation, setUserInformation] = useState({
     email: "",

@@ -13,7 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 
 const Account = () => {
   // global state
-    const [state, setState] = useAuthContext()
+    const { state, setState } = useAuthContext()
     
     const [userInformation, setUserInformation] = useState({
         name: state?.user?.name || "",
