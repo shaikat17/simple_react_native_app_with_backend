@@ -1,14 +1,15 @@
 import { View, Text, StyleSheet, TextInput } from 'react-native'
-const InputField = ({ lable, keyboardType, autoComplete, secureTextEntry=false, value, setValue }) => {
+const InputField = ({ lable, keyboardType, autoComplete, secureTextEntry=false, value, setValue, editable=true, customStyles }) => {
   return (
     <View>
           <Text style={styles.inputLabel}>{lable}</Text>
-          <TextInput style={styles.inputBox}
+          <TextInput style={[styles.inputBox, customStyles]}
               autoCorrect={false}
               keyboardType={keyboardType}
               autoComplete={autoComplete}
               secureTextEntry={secureTextEntry}
-              value={value}
+        value={value}
+        editable={editable}
               onChangeText={(text) => setValue(prevState => ({
                 ...prevState, [lable]: text
       }))}    />
@@ -19,7 +20,9 @@ export default InputField
 
 const styles = StyleSheet.create({
     inputLabel: {
-        textTransform: 'capitalize'
+    textTransform: 'capitalize',
+    fontWeight: 'bold',
+      fontSize: 18,
     },
     inputBox: {
       height: 40,
