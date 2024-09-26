@@ -1,4 +1,5 @@
-import { View, Text, StyleSheet, Image } from 'react-native'
+import { View, StyleSheet, Image } from 'react-native'
+import authFetch from '../utils/authFetch';
 import {useState} from 'react'
 import { useAuthContext } from '../context/authContext'
 import FooterMenu from '../components/menus/FooterMenu'
@@ -7,8 +8,6 @@ import {
 } from 'react-native-safe-area-context';
 import InputField from '../components/forms/InputField';
 import SubmitButton from '../components/forms/SubmitButton';
-import axios from 'axios';
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from '@react-navigation/native';
 
 
@@ -32,14 +31,14 @@ const Account = () => {
     
             // Validate required fields
             if (!userInformation.name || !userInformation.email) {
-                Alert.alert("Opss!!!", "All fields must be filled.");
+                alert("Opss!!! All fields must be filled.");
                 setLoading(false);
                 return;
             }
-    
+            
             // Make the API request
-            const { data } = await axios.post("/auth/update", { ...userInformation });
-    
+            const { data } = await authFetch.post("/auth/update", { ...userInformation });
+            
             // Check if the response data is valid
             if (data) {
                 // Optional: stringifying the entire response can be unnecessary
@@ -57,7 +56,7 @@ const Account = () => {
             // Gracefully handle potential errors
             const errorMessage = error.response?.data?.message || "Something went wrong.";
             alert(errorMessage);
-            console.log("🚀 ~ handleSubmit ~ error:", error);
+            console.log("🚀 ~ handleSubmit Account  ~ error:", error);
         } finally {
             // Ensure loading is turned off regardless of success or failure
             setLoading(false);

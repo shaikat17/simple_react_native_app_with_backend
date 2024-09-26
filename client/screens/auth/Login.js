@@ -30,7 +30,7 @@ const Login = ({ navigation }) => {
       }
       setLoading(false);
       const { data } = await axios.post(
-        "/auth/login",
+        "http://192.168.1.10:5000/api/v1/auth/login",
         { ...userInformation }
       );
       setState(data)

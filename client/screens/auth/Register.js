@@ -30,7 +30,7 @@ const Register = ({ navigation }) => {
       }
       setLoading(false);
       const { data } = await axios.post(
-        "/auth/register",
+        "http://192.168.1.10:5000/api/v1/auth/register",
         { ...userInformation }
       );
       console.log(data)

@@ -14,8 +14,8 @@ const AuthProvider = ({ children }) => {
         token: ''
     })
 
-    // default axios 
-    axios.defaults.baseURL = 'http://192.168.1.10:5000/api/v1'
+  
+    
     // initial local storage data
   useEffect(() => {
     const loadLoaclStorageData = async () => {
