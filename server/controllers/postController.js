@@ -32,4 +32,23 @@ const createPostController = async (req, res) => {
   }
 };
 
-export { createPostController };
+// get post controller
+const getAllPostController = async (req, res) => {
+  try {
+    const posts = await Post.find().populate("author", "_id name").sort({ createdAt: -1 });
+    res.status(200).json({
+      success: true,
+      message: "Posts fetched successfully",
+      posts,
+    });
+  } catch (error) {
+    console.log("🚀 ~ getPostController ~ error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error
+    });
+  }
+};
+
+export { createPostController, getAllPostController };
