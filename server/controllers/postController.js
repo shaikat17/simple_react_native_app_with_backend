@@ -15,9 +15,13 @@ const createPostController = async (req, res) => {
         message: "description is required",
       });
     }
-    
+    // Attach the user ID to the post
     req.body.author = req.user.userId;
-    const post = await Post.create( req.body );
+
+    let post = await Post.create( req.body );
+    
+    post = await post.populate('author', 'name _id')
+    
     res.status(200).json({
       success: true,
       message: "Post created successfully",
