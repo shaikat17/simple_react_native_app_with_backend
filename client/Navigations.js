@@ -1,11 +1,14 @@
-import { View, Text } from 'react-native'
-import AuthProvider from './context/authContext'
-import ScreenMenu from './components/menus/ScreenMenu'
+import { View, Text } from "react-native";
+import AuthProvider from "./context/authContext";
+import ScreenMenu from "./components/menus/ScreenMenu";
+import { PaperProvider } from "react-native-paper";
 const RootNavigation = () => {
   return (
     <AuthProvider>
-      <ScreenMenu />
+      <PaperProvider>
+        <ScreenMenu />
+      </PaperProvider>
     </AuthProvider>
-  )
-}
-export default RootNavigation
+  );
+};
+export default RootNavigation;

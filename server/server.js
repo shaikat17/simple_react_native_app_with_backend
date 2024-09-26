@@ -6,6 +6,7 @@ import morgan from 'morgan'
 import express from 'express'
 import connectDB from './config/db.js'
 import authRouter from './routes/authRoutes.js'
+import postRouter from './routes/postRoutes.js'
 
 // dot env
 dotenv.config()
@@ -22,6 +23,7 @@ app.use(morgan('dev'))
 
 // Routes
 app.use('/api/v1/auth', authRouter)
+app.use('/api/v1/posts', postRouter)
 
 // PORT
 const PORT = process.env.PORT || 8080
