@@ -36,3 +36,4 @@ justifyContent: 'space-between'
         fontSize: 25
     }
 })
+
