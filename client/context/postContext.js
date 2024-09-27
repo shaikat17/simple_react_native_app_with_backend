@@ -1,6 +1,7 @@
 
 import { useState, useContext, createContext, useEffect } from "react";
 import axios from "axios";
+import authFetch from "../utils/authFetch";
 
 
 const PostContext = createContext()
@@ -9,6 +10,7 @@ export const PostProvider = ({ children }) => {
     const [loading, setLoading] = useState(false) 
     const [allPosts, setAllPosts] = useState([])
     const [postStatusUpdate, setPostStatusUpdate] = useState(false)
+    const [userPosts, setUserPosts] = useState([])
 
     // get all posts
     const getPosts = async () => {
@@ -23,12 +25,29 @@ export const PostProvider = ({ children }) => {
         }
     }
 
+    //  get user posts
+    const getUserPosts = async () => {
+        try {
+            setLoading(true)
+            const { data } = await authFetch.get('/posts/get-user-posts')
+            setUserPosts(data.posts)
+            setLoading(false)
+            setPostStatusUpdate(false)
+        } catch (error) {
+            console.log(error)
+            setLoading(false)
+            alert(error.response.data.message || error)
+        }
+    }
+
+
     useEffect(() => {
         getPosts()
+        getUserPosts()
         setPostStatusUpdate(false)
     }, [postStatusUpdate])
 
-    return <PostContext.Provider value={{loading, setLoading, allPosts, setAllPosts, postStatusUpdate, setPostStatusUpdate}}>
+    return <PostContext.Provider value={{loading, setLoading, allPosts, setAllPosts, postStatusUpdate, setPostStatusUpdate, userPosts}}>
         {children}
     </PostContext.Provider>
 }

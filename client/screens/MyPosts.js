@@ -1,39 +1,14 @@
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native'
+import { View, StyleSheet, ScrollView, ActivityIndicator } from 'react-native'
 import {
     useSafeAreaInsets,
 } from 'react-native-safe-area-context';
-import { useState, useEffect } from 'react'
 import FooterMenu from '../components/menus/FooterMenu'
-import authFetch from '../utils/authFetch';
 import PostCard from '../components/PostCard';
 import { usePostContext } from '../context/postContext';
 const MyPosts = () => {
     // global state
-    const { postStatusUpdate, setPostStatusUpdate, loading, setLoading } = usePostContext();
+    const {loading, userPosts } = usePostContext();
     const insets = useSafeAreaInsets();
-
-    // local state
-    const [posts, setPosts] = useState([])
-
-    //  get user posts
-    const getUserPosts = async () => {
-        try {
-            setLoading(true)
-            const { data } = await authFetch.get('/posts/get-user-posts')
-            setPosts(data.posts)
-            setLoading(false)
-            setPostStatusUpdate(false)
-        } catch (error) {
-            console.log(error)
-            setLoading(false)
-            alert(error.response.data.message || error)
-        }
-    }
-
-    useEffect(() => {
-        getUserPosts()
-        setPostStatusUpdate(false)
-    }, [postStatusUpdate])
 
   return (
       <View style={[styles.container, {
@@ -43,9 +18,8 @@ const MyPosts = () => {
           paddingRight: insets.right,
       }]}>
           {loading ? <ActivityIndicator style={{ flex: 1 }} size="large" color="#ea2222" /> : <ScrollView>
-          <PostCard posts={posts} userPosts={true} />
+          <PostCard posts={userPosts} userPostScreen={true} />
           </ScrollView>}
-          
           <View style={{ backgroundColor: "white" }}>
           <FooterMenu />
       </View>

@@ -6,9 +6,9 @@ import authFetch from '../utils/authFetch'
 import { usePostContext } from '../context/postContext'
 import EditModal from './EditModal'
 
-const PostCard = ({ posts, userPosts = false }) => {
+const PostCard = ({ posts, userPostScreen = false }) => {
     // global state
-    const { setPostStatusUpdate } = usePostContext();
+    const { setPostStatusUpdate, allPosts, userPosts } = usePostContext();
     // local state
     const [loading, setLoading] = useState(false)
     const [modalVisible, setModalVisible] = useState(false);
@@ -46,11 +46,14 @@ const PostCard = ({ posts, userPosts = false }) => {
     
   return (
     <View>
-          <Text style={styles.heading}>Total Posts: {posts.length}</Text>
-          {userPosts && <EditModal modalVisible={modalVisible} setModalVisible={setModalVisible} post={singlePost} />}
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', fontWeight: 'bold', paddingHorizontal: 10 }}>
+              <Text style={styles.heading}>Total Posts: {allPosts && allPosts.length}</Text>
+              <Text style={styles.heading}>Your Posts: {userPosts && userPosts.length}</Text>
+          </View>
+          {userPostScreen && <EditModal modalVisible={modalVisible} setModalVisible={setModalVisible} post={singlePost} />}
           {posts?.map((post, index) => (
               <View style={styles.card} key={index}>
-                  {userPosts && <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                  {userPostScreen && <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
                       {/* for edit post */}
                       <FontAwesome5 name='pen' style={[styles.iconStyle, { fontSize: 18, marginRight: 20 }]} onPress={() => { setSinglePost(post); setModalVisible(true)}} />
                       {/* for delete post */}
@@ -90,8 +93,10 @@ const styles = StyleSheet.create({
 
     },
     heading: {
-        color: 'red',
+        color: '#363434',
         textAlign: 'center',
+        fontWeight: 'bold',
+        fontSize: 20,
     },
     postTitle: {
         fontWeight: 'bold',

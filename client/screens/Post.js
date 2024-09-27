@@ -14,7 +14,7 @@ import { usePostContext } from "../context/postContext";
 
 const Post = ({ navigation }) => {
   // global state
-  const { setAllPosts } = usePostContext();
+  const { setAllPosts, setPostStatusUpdate } = usePostContext();
   // local state
   const [loading, setLoading] = useState(false);
   const [postInformation, setPostInformation] = useState({
@@ -37,7 +37,7 @@ const Post = ({ navigation }) => {
         "/posts/create-post",
         postInformation
       );
-      setAllPosts((prev) => [data.post, ...prev]);
+      setPostStatusUpdate(true);
       alert(data.message);
       setLoading(false);
       navigation.navigate("Home");
