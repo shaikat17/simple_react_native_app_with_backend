@@ -15,35 +15,38 @@ import { usePostContext } from "../context/postContext";
 const Post = ({ navigation }) => {
   // global state
   const { setAllPosts } = usePostContext();
-    // local state
+  // local state
   const [loading, setLoading] = useState(false);
   const [postInformation, setPostInformation] = useState({
     title: "",
     description: "",
   });
 
-    const insets = useSafeAreaInsets();
-    
-    // handle post submit
-    const handlePostSubmit = async () => {
-        try {
-            setLoading(true)
-            if(!postInformation.title || !postInformation.description) {
-                alert("All fields must be filled")
-                setLoading(false)
-                return
-            }
-          const { data } = await authFetch.post('/posts/create-post', postInformation)
-          setAllPosts(prev => [data.post, ...prev])
-            alert(data.message)
-            setLoading(false)
-            navigation.navigate('Home')
-        } catch (error) {
-            alert(error.response.data.message || error.message);
-            setLoading(false)
-            console.log(error)
-        }
+  const insets = useSafeAreaInsets();
+
+  // handle post submit
+  const handlePostSubmit = async () => {
+    try {
+      setLoading(true);
+      if (!postInformation.title || !postInformation.description) {
+        alert("All fields must be filled");
+        setLoading(false);
+        return;
+      }
+      const { data } = await authFetch.post(
+        "/posts/create-post",
+        postInformation
+      );
+      setAllPosts((prev) => [data.post, ...prev]);
+      alert(data.message);
+      setLoading(false);
+      navigation.navigate("Home");
+    } catch (error) {
+      alert(error.response.data.message || error.message);
+      setLoading(false);
+      console.log(error);
     }
+  };
   return (
     <View
       style={[
@@ -81,11 +84,15 @@ const Post = ({ navigation }) => {
         </View>
         <View>
           <TouchableOpacity style={styles.postBtn} onPress={handlePostSubmit}>
-                      <Text style={styles.btnText}>{ loading ? "Please Wait" : "Create Post" }</Text>
+            <Text style={styles.btnText}>
+              {loading ? "Please Wait" : "Create Post"}
+            </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
-      <FooterMenu />
+      <View style={{ backgroundColor: "white" }}>
+        <FooterMenu />
+      </View>
     </View>
   );
 };

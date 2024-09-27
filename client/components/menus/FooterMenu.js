@@ -18,9 +18,9 @@ const FooterMenu = () => {
           <FontAwesome5 name='plus-square' style={styles.iconStyle} color={route.name === 'Post' && 'red'} />
       <Text>Post</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('About')}>
-          <FontAwesome5 name='info-circle' style={styles.iconStyle} color={route.name === 'About' && 'red'} />
-      <Text>About</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Myposts')}>
+          <FontAwesome5 name='list' style={styles.iconStyle} color={route.name === 'Myposts' && 'red'} />
+      <Text>My Posts</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Account')}>
           <FontAwesome5 name='user' style={styles.iconStyle} color={route.name === 'Account' && 'red'} />

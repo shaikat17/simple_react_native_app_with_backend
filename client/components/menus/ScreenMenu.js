@@ -8,6 +8,7 @@ import HeaderMenu from "./HeaderMenu";
 import Post from "../../screens/Post";
 import About from "../../screens/About";
 import Account from "../../screens/Account";
+import MyPosts from "../../screens/MyPosts";
 
 const ScreenMenu = () => {
   // global state
@@ -50,6 +51,14 @@ const ScreenMenu = () => {
             component={Account}
             options={{ 
                         headerBackTitle: 'Back',
+                        headerRight: () => <HeaderMenu />
+             }}
+          />
+          <Stack.Screen
+            name="Myposts"
+            component={MyPosts}
+            options={{ 
+              headerBackTitle: 'Back',
                         headerRight: () => <HeaderMenu />
              }}
           />

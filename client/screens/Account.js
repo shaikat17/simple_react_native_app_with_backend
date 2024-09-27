@@ -101,7 +101,9 @@ return (
         </View>
             <SubmitButton btnTitle={"Update"} loading={loading} handleSubmit={handleSubmit}  />
         </View>
-        <FooterMenu />
+        <View style={{ backgroundColor: "white" }}>
+          <FooterMenu />
+      </View>
   </View>
   )
 }
