@@ -11,6 +11,8 @@ const PostCard = ({ posts, userPosts = false }) => {
     const { setPostDeleted } = usePostContext();
     // local state
     const [loading, setLoading] = useState(false)
+    const [modalVisible, setModalVisible] = useState(false);
+    const [singlePost, setSinglePost] = useState({})
 
     // delete prompt
     const deletePrompt = (id) => {
@@ -41,15 +43,16 @@ const PostCard = ({ posts, userPosts = false }) => {
           console.log(error);
         }
     }
+    
   return (
     <View>
           <Text style={styles.heading}>Total Posts: {posts.length}</Text>
-          {userPosts && <EditModal />}
+          {userPosts && <EditModal modalVisible={modalVisible} setModalVisible={setModalVisible} post={singlePost} />}
           {posts?.map((post, index) => (
               <View style={styles.card} key={index}>
                   {userPosts && <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
                       {/* for edit post */}
-                      <FontAwesome5 name='pen' style={[styles.iconStyle, { fontSize: 18, marginRight: 20 }]} onPress={() => deletePrompt(post._id)} />
+                      <FontAwesome5 name='pen' style={[styles.iconStyle, { fontSize: 18, marginRight: 20 }]} onPress={() => { setSinglePost(post); setModalVisible(true)}} />
                       {/* for delete post */}
                       <FontAwesome5 name='trash' style={[styles.iconStyle, { fontSize: 18}]}  onPress={() => deletePrompt(post._id)}/>
                   </View> }
