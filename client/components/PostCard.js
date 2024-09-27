@@ -1,13 +1,58 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Alert } from 'react-native'
 import moment from 'moment'
+import { useState } from 'react'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import authFetch from '../utils/authFetch'
+import { usePostContext } from '../context/postContext'
+import EditModal from './EditModal'
 
-const PostCard = ({ posts }) => {
+const PostCard = ({ posts, userPosts = false }) => {
+    // global state
+    const { setPostDeleted } = usePostContext();
+    // local state
+    const [loading, setLoading] = useState(false)
+
+    // delete prompt
+    const deletePrompt = (id) => {
+        Alert.alert(
+            "Delete Post",
+            "Are you sure you want to delete this post?",
+            [
+                {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel Pressed"),
+                },
+                { text: "OK", onPress: () => handleDeletePost(id) },
+            ]
+        )
+    }
+
+    // delete post function
+    const handleDeletePost = async (id) => {
+        try {
+          setLoading(true);
+          const { data } = await authFetch.delete(`/posts/delete-post/${id}`);
+          setPostDeleted(true);
+          alert(data.message);
+          setLoading(false);
+        } catch (error) {
+          alert(error.response.data.message || error);
+          setLoading(false);
+          console.log(error);
+        }
+    }
   return (
     <View>
           <Text style={styles.heading}>Total Posts: {posts.length}</Text>
+          {userPosts && <EditModal />}
           {posts?.map((post, index) => (
               <View style={styles.card} key={index}>
+                  {userPosts && <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                      {/* for edit post */}
+                      <FontAwesome5 name='pen' style={[styles.iconStyle, { fontSize: 18, marginRight: 20 }]} onPress={() => deletePrompt(post._id)} />
+                      {/* for delete post */}
+                      <FontAwesome5 name='trash' style={[styles.iconStyle, { fontSize: 18}]}  onPress={() => deletePrompt(post._id)}/>
+                  </View> }
                   <Text style={styles.postTitle}>Title: {post.title}</Text>
                   <Text style={styles.postDescription}>{post.description}</Text>
                   <View style={styles.postFooter}>

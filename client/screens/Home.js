@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
 import { useAuthContext } from "../context/authContext";
 import FooterMenu from "../components/menus/FooterMenu";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -22,9 +22,14 @@ const Home = () => {
         },
       ]}
     >
-          <ScrollView>
+      {loading ? (
+        <ActivityIndicator style={{ flex: 1 }} size="large" color="#ea2222" />
+      ) : (
+        <ScrollView>
           <PostCard posts={allPosts} />
       </ScrollView>
+      )}
+          
           <View style={{ backgroundColor: "white" }}>
           <FooterMenu />
       </View>

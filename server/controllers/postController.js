@@ -74,4 +74,34 @@ const getUserPosts = async (req, res) => {
   }
 };
 
-export { createPostController, getAllPostController, getUserPosts };
+// delete post controller
+const deletePostController = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: "Post not found",
+      });
+    }
+    if (post.author.toString() !== req.user.userId) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+    await Post.findByIdAndDelete(req.params.id);
+    res.status(200).json({
+      success: true,
+      message: "Post deleted successfully",
+    });
+  } catch (error) {
+    console.log("🚀 ~ deletePostController ~ error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+export { createPostController, getAllPostController, getUserPosts, deletePostController };
