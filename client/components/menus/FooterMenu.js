@@ -35,7 +35,10 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         margin: 10,
-justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        borderTopColor: 'red',
+        borderTopWidth: 0.5,
+        paddingTop: 5
     },
     iconStyle: {
         marginBottom: 3,

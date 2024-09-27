@@ -47,7 +47,7 @@ export const PostProvider = ({ children }) => {
         setPostStatusUpdate(false)
     }, [postStatusUpdate])
 
-    return <PostContext.Provider value={{loading, setLoading, allPosts, setAllPosts, postStatusUpdate, setPostStatusUpdate, userPosts}}>
+    return <PostContext.Provider value={{loading, setLoading, allPosts, setAllPosts, postStatusUpdate, setPostStatusUpdate, userPosts, getPosts}}>
         {children}
     </PostContext.Provider>
 }
