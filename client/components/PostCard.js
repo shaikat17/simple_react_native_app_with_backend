@@ -8,7 +8,7 @@ import EditModal from './EditModal'
 
 const PostCard = ({ posts, userPosts = false }) => {
     // global state
-    const { setPostDeleted } = usePostContext();
+    const { setPostStatusUpdate } = usePostContext();
     // local state
     const [loading, setLoading] = useState(false)
     const [modalVisible, setModalVisible] = useState(false);
@@ -34,7 +34,7 @@ const PostCard = ({ posts, userPosts = false }) => {
         try {
           setLoading(true);
           const { data } = await authFetch.delete(`/posts/delete-post/${id}`);
-          setPostDeleted(true);
+          setPostStatusUpdate(true);
           alert(data.message);
           setLoading(false);
         } catch (error) {

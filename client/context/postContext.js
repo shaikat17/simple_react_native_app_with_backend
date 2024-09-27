@@ -8,7 +8,7 @@ const PostContext = createContext()
 export const PostProvider = ({ children }) => {
     const [loading, setLoading] = useState(false) 
     const [allPosts, setAllPosts] = useState([])
-    const [postDeleted, setPostDeleted] = useState(false)
+    const [postStatusUpdate, setPostStatusUpdate] = useState(false)
 
     // get all posts
     const getPosts = async () => {
@@ -25,10 +25,10 @@ export const PostProvider = ({ children }) => {
 
     useEffect(() => {
         getPosts()
-        setPostDeleted(false)
-    }, [postDeleted])
+        setPostStatusUpdate(false)
+    }, [postStatusUpdate])
 
-    return <PostContext.Provider value={{loading, setLoading, allPosts, setAllPosts, postDeleted, setPostDeleted}}>
+    return <PostContext.Provider value={{loading, setLoading, allPosts, setAllPosts, postStatusUpdate, setPostStatusUpdate}}>
         {children}
     </PostContext.Provider>
 }

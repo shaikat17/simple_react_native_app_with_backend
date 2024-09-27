@@ -9,7 +9,7 @@ import PostCard from '../components/PostCard';
 import { usePostContext } from '../context/postContext';
 const MyPosts = () => {
     // global state
-    const { postDeleted, setPostDeleted, loading, setLoading } = usePostContext();
+    const { postStatusUpdate, setPostStatusUpdate, loading, setLoading } = usePostContext();
     const insets = useSafeAreaInsets();
 
     // local state
@@ -22,7 +22,7 @@ const MyPosts = () => {
             const { data } = await authFetch.get('/posts/get-user-posts')
             setPosts(data.posts)
             setLoading(false)
-            setPostDeleted(false)
+            setPostStatusUpdate(false)
         } catch (error) {
             console.log(error)
             setLoading(false)
@@ -32,8 +32,8 @@ const MyPosts = () => {
 
     useEffect(() => {
         getUserPosts()
-        setPostDeleted(false)
-    }, [postDeleted])
+        setPostStatusUpdate(false)
+    }, [postStatusUpdate])
 
   return (
       <View style={[styles.container, {

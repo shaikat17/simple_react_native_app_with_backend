@@ -1,7 +1,13 @@
 import React, {useState, useEffect} from 'react';
-import {Alert, Modal, StyleSheet, Text, Pressable, View, TextInput, ScrollView} from 'react-native';
+import { Alert, Modal, StyleSheet, Text, Pressable, View, TextInput, ScrollView } from 'react-native';
+import { usePostContext } from '../context/postContext';
+import authFetch from '../utils/authFetch';
 
 const EditModal = ({ modalVisible, setModalVisible, post }) => {
+  // global state
+  const { loading, setLoading, setPostStatusUpdate } = usePostContext();
+
+  // local state
     const [postInformation, setPostInformation] = useState({
         title: '',
         description: ''
@@ -9,7 +15,31 @@ const EditModal = ({ modalVisible, setModalVisible, post }) => {
 
     useEffect(() => {
         setPostInformation(post)
-    },[post])
+    }, [post])
+  
+  // handle post update submit
+  const handlePostUpdateSubmit = async () => {
+    try {
+      setLoading(true);
+      if (!postInformation.title || !postInformation.description) {
+        alert("All fields must be filled");
+        setLoading(false);
+        return;
+      }
+      const { data } = await authFetch.put(
+        `/posts/update-post/${post._id}`,
+        postInformation
+      );
+      setPostStatusUpdate(true);
+      setModalVisible(false);
+      alert(data.message);
+      setLoading(false);
+    } catch (error) {
+      alert(error.response.data.message || error.message);
+      setLoading(false);
+      console.log(error);
+    }
+  }
   return (
     <View style={styles.centeredView}>
       <Modal
@@ -26,7 +56,7 @@ const EditModal = ({ modalVisible, setModalVisible, post }) => {
                       <Text style={styles.modalText}>Update Your Post</Text>
                       <Text style={styles.inputTitle}>Title: </Text>
                           <TextInput style={styles.inputBox} value={postInformation.title}
-                      onChageText={text => setPostInformation(prevState => ({...prevState, title: text}))}    />
+                      onChangeText={text => setPostInformation(prevState => ({...prevState, title: text}))}    />
                       <Text style={styles.inputTitle}>Description:</Text>
                           <TextInput style={styles.inputBox}
                           onChangeText={text => setPostInformation(prevState => ({...prevState, description: text}))}
@@ -43,7 +73,7 @@ const EditModal = ({ modalVisible, setModalVisible, post }) => {
                           {/* For update content */}
                           <Pressable
               style={[styles.button, { backgroundColor: 'green' }]}
-              onPress={() => setModalVisible(!modalVisible)}>
+              onPress={handlePostUpdateSubmit}>
               <Text style={styles.textStyle}>Update</Text>
             </Pressable>
             </View>
