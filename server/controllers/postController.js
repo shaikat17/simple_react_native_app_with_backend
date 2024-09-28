@@ -178,11 +178,32 @@ const postCommentsController = async (req, res) => {
   } catch (error) {}
 };
 
+// get comments
+const getCommentsController = async (req, res) => {
+  try {
+    const { postId } = req.params
+    const comments = await Comment.find({postId}).populate("userId", "name avatar");
+    res.status(200).json({
+      success: true,
+      message: "Comments fetched successfully",
+      comments,
+    });
+  } catch (error) {
+    console.log("🚀 ~ getCommentsController ~ error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error,
+    });
+  }
+};
+
 export {
   createPostController,
   getAllPostController,
   getUserPosts,
   deletePostController,
   updatePostController,
-  postCommentsController
+  postCommentsController,
+  getCommentsController,
 };
