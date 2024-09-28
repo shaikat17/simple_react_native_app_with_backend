@@ -10,7 +10,6 @@ import InputField from '../components/forms/InputField';
 import SubmitButton from '../components/forms/SubmitButton';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 const Account = () => {
   // global state
@@ -27,24 +26,52 @@ const Account = () => {
     const navigation = useNavigation();
   // handle image upload
   const handleImageUpload = async () => {
-    // Request permissions to access the image library
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    // Request permissions to access the camera and media library
+    const cameraPermission = await ImagePicker.requestCameraPermissionsAsync();
+    const mediaLibraryPermission = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-    if (permissionResult.granted) {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
-      
-
-      if (!result.cancelled) {
-        // Update the state with the selected image URI
-        setUserInformation({ ...userInformation, avatar: result.assets[0].uri });
-      }
+    if (cameraPermission.granted && mediaLibraryPermission.granted) {
+      Alert.alert(
+        "Upload Image",
+        "Choose an option",
+        [
+          {
+            text: "Camera",
+            onPress: async () => {
+              const result = await ImagePicker.launchCameraAsync({
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+              });
+              if (!result.canceled) {
+                setUserInformation({ ...userInformation, avatar: result.assets[0].uri });
+              } else {
+                Alert.alert('Please select or capture an image');
+              }
+            },
+          },
+          {
+            text: "Gallery",
+            onPress: async () => {
+              const result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+              });
+              if (!result.canceled) {
+                setUserInformation({ ...userInformation, avatar: result.assets[0].uri });
+              } else {
+                Alert.alert('Please select or capture an image');
+              }
+            },
+          },
+          { text: "Cancel", style: "cancel" },
+        ],
+        { cancelable: true }
+      );
     } else {
-      Alert.alert("Permission to access camera roll is required!");
+      Alert.alert("Permission to access camera and media library is required!");
     }
   };
 
