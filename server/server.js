@@ -32,8 +32,8 @@ app.get('/', (req, res) => {
 // PORT
 const PORT = process.env.PORT || 8080
 
-// app.listen(PORT, () => {
-//     console.log('Server is running on port '.bgGreen.white, PORT.bgGreen.white)
-// })
+app.listen(PORT, () => {
+    console.log('Server is running on port '.bgGreen.white, PORT.bgGreen.white)
+})
 
 export default app

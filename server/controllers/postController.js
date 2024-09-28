@@ -1,4 +1,5 @@
 import { Post } from "../models/postModel.js";
+import Comment from "../models/commentModel.js";
 
 const createPostController = async (req, res) => {
   try {
@@ -18,10 +19,10 @@ const createPostController = async (req, res) => {
     // Attach the user ID to the post
     req.body.author = req.user.userId;
 
-    let post = await Post.create( req.body );
-    
-    post = await post.populate('author', 'name _id')
-    
+    let post = await Post.create(req.body);
+
+    post = await post.populate("author", "name _id");
+
     res.status(200).json({
       success: true,
       message: "Post created successfully",
@@ -39,7 +40,9 @@ const createPostController = async (req, res) => {
 // get post controller
 const getAllPostController = async (req, res) => {
   try {
-    const posts = await Post.find().populate("author", "_id name avatar").sort({ createdAt: -1 });
+    const posts = await Post.find()
+      .populate("author", "_id name avatar")
+      .sort({ createdAt: -1 });
     res.status(200).json({
       success: true,
       message: "Posts fetched successfully",
@@ -50,7 +53,7 @@ const getAllPostController = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Internal server error",
-      error
+      error,
     });
   }
 };
@@ -58,7 +61,9 @@ const getAllPostController = async (req, res) => {
 // get user posts
 const getUserPosts = async (req, res) => {
   try {
-    const posts = await Post.find({ author: req.user.userId }).populate("author", "_id name avatar").sort({ createdAt: -1 });
+    const posts = await Post.find({ author: req.user.userId })
+      .populate("author", "_id name avatar")
+      .sort({ createdAt: -1 });
     res.status(200).json({
       success: true,
       message: "Posts fetched successfully",
@@ -69,7 +74,7 @@ const getUserPosts = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Internal server error",
-      error
+      error,
     });
   }
 };
@@ -147,5 +152,37 @@ const updatePostController = async (req, res) => {
   }
 };
 
+const postCommentsController = async (req, res) => {
+  try {
+    const { postId, comment } = req.body;
+    const { userId } = req.user;
 
-export { createPostController, getAllPostController, getUserPosts, deletePostController, updatePostController };
+    if (!comment) {
+      return res.status(400).json({
+        success: false,
+        message: "Please write something before commenting",
+      });
+    }
+
+    const newComment = new Comment({
+      postId,
+      userId,
+      comment,
+    });
+
+    await newComment.save();
+    res.status(200).json({
+      success: true,
+      message: "Comment added successfully",
+    })
+  } catch (error) {}
+};
+
+export {
+  createPostController,
+  getAllPostController,
+  getUserPosts,
+  deletePostController,
+  updatePostController,
+  postCommentsController
+};
