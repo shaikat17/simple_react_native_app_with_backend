@@ -19,13 +19,12 @@ const Account = () => {
     const [userInformation, setUserInformation] = useState({
         name: state?.user?.name || "",
       email: state?.user?.email || "",   
-        avatar: null
+        avatar: state?.user?.avatar || null,
     })
     const [loading, setLoading] = useState(false)
 
     const insets = useSafeAreaInsets();
     const navigation = useNavigation();
-    
   // handle image upload
   const handleImageUpload = async () => {
     // Request permissions to access the image library
@@ -81,7 +80,6 @@ const Account = () => {
       formData.append('name', userInformation.name);
       formData.append('email', userInformation.email);
 
-          console.log(formData._parts[0][1])  
       // Make the API request
       const { data } = await authFetch.post('/auth/update', formData, {
         headers: {
@@ -114,9 +112,9 @@ return (
         <View style={styles.ImgContainer}>
         <TouchableOpacity onPress={handleImageUpload}>
             {userInformation.avatar ? (
-              <Image source={{ uri: userInformation.avatar }} style={{ width: 100, height: 100 }} />
+              <Image source={{ uri: userInformation.avatar }} style={{ width: 200, height: 200, borderRadius: 50 }} />
             ) : (
-              <Image source={{ uri: 'https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png' }} style={{ width: 100, height: 100 }} />
+              <Image source={{ uri: 'https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png' }} style={{ width: 200, height: 200, borderRadius: 50 }} />
             )}
           </TouchableOpacity>
         </View>

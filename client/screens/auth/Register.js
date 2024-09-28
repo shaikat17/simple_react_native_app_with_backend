@@ -31,7 +31,7 @@ const Register = ({ navigation }) => {
       }
 
       const { data } = await axios.post(
-        "https://react-native-backend-ten.vercel.app/api/v1/auth/register",
+        "http://192.168.1.10:5000/api/v1/auth/register",
         userInformation
       );
 

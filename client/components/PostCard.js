@@ -1,19 +1,21 @@
-import { View, Text, StyleSheet, Alert, ActivityIndicator } from 'react-native'
+import { View, Text, StyleSheet, Alert, ActivityIndicator, Image } from 'react-native'
 import moment from 'moment'
 import { useState } from 'react'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import authFetch from '../utils/authFetch'
 import { usePostContext } from '../context/postContext'
 import EditModal from './EditModal'
+import { useAuthContext } from '../context/authContext'
 
 const PostCard = ({ posts, userPostScreen = false }) => {
     // global state
-    const { setPostStatusUpdate, allPosts, userPosts } = usePostContext();
+  const { setPostStatusUpdate, allPosts, userPosts } = usePostContext();
+  const { state } = useAuthContext();
 
     // local state
     const [loading, setLoading] = useState(false)
     const [modalVisible, setModalVisible] = useState(false);
-    const [singlePost, setSinglePost] = useState({})
+  const [singlePost, setSinglePost] = useState({})
 
     // delete prompt
     const deletePrompt = (id) => {
@@ -69,8 +71,16 @@ const PostCard = ({ posts, userPostScreen = false }) => {
           <Text style={styles.postTitle}>Title: {post.title}</Text>
           <Text style={styles.postDescription}>{post.description}</Text>
           <View style={styles.postFooter}>
-            <View style={styles.footerAuthor}>
+          <View style={styles.footerAuthor}>
+            
+              {(state?.user?.avatar && (state?.user?.name === post.author.name)) ? (
+                <Image
+                  source={{ uri: state.user.avatar }}
+                  style={{ width: 20, height: 20, borderRadius: 25, marginRight: 10 }}
+                />
+            ) : (
               <FontAwesome5 name='user' style={styles.iconStyle} />
+              )}
               <Text style={styles.footerAuthorNameDate}>{post.author.name}</Text>
             </View>
             <View style={styles.footerDate}>

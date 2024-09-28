@@ -56,12 +56,14 @@ const registerConltroller = async (req, res) => {
   }
 };
 
-
 // Login Controller Function
 const loginController = async (req, res) => {
   try {
     let { email, password } = req.body;
-    console.log("🚀 ~ loginController ~ { email, password }:", { email, password })
+    console.log("🚀 ~ loginController ~ { email, password }:", {
+      email,
+      password,
+    });
 
     // validation
     if (!email) {
@@ -97,16 +99,16 @@ const loginController = async (req, res) => {
         message: "Opps! Email or Password is incorrect.",
       });
     }
-      //   jwt token
-      const token = await createToken(user)
+    //   jwt token
+    const token = await createToken(user);
 
     //   undefined password
-      user.password = undefined
+    user.password = undefined;
     return res.status(200).json({
       success: false,
       message: "Login is SuccessFull",
-        user,
-      token
+      user,
+      token,
     });
   } catch (error) {
     console.log("🚀 ~ loginController ~ error:", error);
@@ -122,24 +124,30 @@ const loginController = async (req, res) => {
 const updateController = async (req, res) => {
   try {
     const { name, email } = req.body;
+    const avatar = req.file?.path; // Avatar URL from Cloudinary
+
     if (!name) {
       return res.status(400).json({
         success: false,
-        message: "name is required",
+        message: "Name is required",
       });
     }
     if (!email) {
       return res.status(400).json({
         success: false,
-        message: "email is required",
+        message: "Email is required",
       });
     }
-    
+
+    // Update user details, including avatar if provided
+    const updateData = avatar ? { name, email, avatar } : { name, email };
+
     const user = await User.findOneAndUpdate(
       { email },
-      { name, email },
+      updateData,
       { new: true }
     );
+
     res.status(200).json({
       success: true,
       message: "User information updated successfully",
@@ -153,6 +161,6 @@ const updateController = async (req, res) => {
       error,
     });
   }
-};  
+};
 
 export { registerConltroller, loginController, updateController };

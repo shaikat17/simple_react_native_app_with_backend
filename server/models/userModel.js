@@ -23,6 +23,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: 'user'
     },
+    avatar: {
+        type: String, // URL of the avatar stored in Cloudinary
+        default: null
+    }
 },
     { timestamps: true })
 
