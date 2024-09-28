@@ -1,4 +1,4 @@
-import { View, StyleSheet, Image } from 'react-native'
+import { View, StyleSheet, Image, Alert, TouchableOpacity } from 'react-native'
 import authFetch from '../utils/authFetch';
 import {useState} from 'react'
 import { useAuthContext } from '../context/authContext'
@@ -9,7 +9,8 @@ import {
 import InputField from '../components/forms/InputField';
 import SubmitButton from '../components/forms/SubmitButton';
 import { useNavigation } from '@react-navigation/native';
-
+import * as ImagePicker from 'expo-image-picker';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 const Account = () => {
   // global state
@@ -17,13 +18,37 @@ const Account = () => {
     
     const [userInformation, setUserInformation] = useState({
         name: state?.user?.name || "",
-        email: state?.user?.email || "",    
+      email: state?.user?.email || "",   
+        avatar: null
     })
     const [loading, setLoading] = useState(false)
 
     const insets = useSafeAreaInsets();
     const navigation = useNavigation();
     
+  // handle image upload
+  const handleImageUpload = async () => {
+    // Request permissions to access the image library
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted) {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+      
+
+      if (!result.cancelled) {
+        // Update the state with the selected image URI
+        setUserInformation({ ...userInformation, avatar: result.assets[0].uri });
+      }
+    } else {
+      Alert.alert("Permission to access camera roll is required!");
+    }
+  };
+
     // update user function
     const handleSubmit = async () => {
         try {
@@ -42,24 +67,41 @@ const Account = () => {
             return;
           }
           
-          // Make the API request
-          const { data } = await authFetch.post("/auth/update", { ...userInformation });
-          
-          // Check if the response data is valid
-          if (data) {
-            setState({ ...state, user: data.user || state.user });
-            alert(data.message);
-            navigation.navigate('Home');
-          }
-        } catch (error) {
-          // Gracefully handle potential errors
-          const errorMessage = error.response?.data?.message || "Something went wrong.";
-          alert(errorMessage);
-          console.log("🚀 ~ handleSubmit Account  ~ error:", error);
-        } finally {
-          setLoading(false);
-        }
-      };
+          // Prepare form data for the image upload
+      const formData = new FormData();
+          if (userInformation.avatar) {
+        formData.append('avatar', {
+          uri: userInformation.avatar,
+          type: 'image/jpeg', // adjust based on your image type
+          name: 'avatar.jpg', // or a dynamic name
+        });
+      }
+
+      // Append other user info
+      formData.append('name', userInformation.name);
+      formData.append('email', userInformation.email);
+
+          console.log(formData._parts[0][1])  
+      // Make the API request
+      const { data } = await authFetch.post('/auth/update', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (data) {
+        setState({ ...state, user: data.user || state.user });
+        Alert.alert(data.message);
+        navigation.navigate('Home');
+      }
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || "Something went wrong.";
+      Alert.alert(errorMessage);
+      console.log("🚀 ~ handleSubmit Account  ~ error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
 return (
     <View style={[styles.container, {
@@ -70,7 +112,13 @@ return (
   }]}>
         <View>
         <View style={styles.ImgContainer}>
-            <Image source={{uri: 'https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png'}} style={{width: 100, height: 100}} />
+        <TouchableOpacity onPress={handleImageUpload}>
+            {userInformation.avatar ? (
+              <Image source={{ uri: userInformation.avatar }} style={{ width: 100, height: 100 }} />
+            ) : (
+              <Image source={{ uri: 'https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png' }} style={{ width: 100, height: 100 }} />
+            )}
+          </TouchableOpacity>
         </View>
         <View style={styles.inputContainer}>
         <InputField
@@ -119,5 +167,6 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         marginTop: 10,
-    }
+  },
+  
 })
