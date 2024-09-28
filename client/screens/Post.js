@@ -5,6 +5,7 @@ import {
   TextInput,
   ScrollView,
   TouchableOpacity,
+  Alert
 } from "react-native";
 import { useState } from "react";
 import FooterMenu from "../components/menus/FooterMenu";
@@ -14,7 +15,7 @@ import { usePostContext } from "../context/postContext";
 
 const Post = ({ navigation }) => {
   // global state
-  const { setAllPosts, setPostStatusUpdate } = usePostContext();
+  const { setPostStatusUpdate } = usePostContext();
   // local state
   const [loading, setLoading] = useState(false);
   const [postInformation, setPostInformation] = useState({
@@ -29,24 +30,33 @@ const Post = ({ navigation }) => {
     try {
       setLoading(true);
       if (!postInformation.title || !postInformation.description) {
-        alert("All fields must be filled");
+        Alert.alert("Validation Error", "All fields must be filled");
         setLoading(false);
         return;
       }
-      const { data } = await authFetch.post(
-        "/posts/create-post",
-        postInformation
-      );
+      if (postInformation.title.length < 5) {
+        Alert.alert("Validation Error", "Title must be at least 5 characters long.");
+        setLoading(false);
+        return;
+      }
+      if (postInformation.description.length < 10) {
+        Alert.alert("Validation Error", "Description must be at least 10 characters long.");
+        setLoading(false);
+        return;
+      }
+
+      const { data } = await authFetch.post("/posts/create-post", postInformation);
       setPostStatusUpdate(true);
-      alert(data.message);
-      setLoading(false);
+      Alert.alert("Success", data.message);
       navigation.navigate("Home");
     } catch (error) {
-      alert(error.response.data.message || error.message);
+      Alert.alert("Error", error.response?.data?.message || error.message);
+    } finally {
       setLoading(false);
-      console.log(error);
     }
   };
+
+  
   return (
     <View
       style={[

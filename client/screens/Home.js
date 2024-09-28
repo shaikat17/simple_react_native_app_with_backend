@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator, RefreshControl } from "react-native";
+import { View, StyleSheet, ScrollView, ActivityIndicator, RefreshControl } from "react-native";
 import { useState } from "react";
 import FooterMenu from "../components/menus/FooterMenu";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -31,16 +31,22 @@ const Home = () => {
       ]}
     >
       {loading ? (
-        <ActivityIndicator style={{ flex: 1 }} size="large" color="#ea2222" />
+        <ActivityIndicator style={styles.loadingIndicator} size="large" color="#ea2222" />
       ) : (
         <ScrollView refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }>
-          <PostCard posts={allPosts} />
+          {allPosts.length > 0 ? (
+            <PostCard posts={allPosts} />
+          ) : (
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyMessage}>No posts available.</Text>
+            </View>
+          )}
       </ScrollView>
       )}
           
-          <View style={{ backgroundColor: "white" }}>
+          <View style={styles.footerContainer}>
           <FooterMenu />
       </View>
     </View>
@@ -53,5 +59,22 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-between",
     margin: 10,
+  },
+  loadingIndicator: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  footerContainer: {
+    backgroundColor: "white",
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  emptyMessage: {
+    fontSize: 18,
+    color: "#777",
   },
 });

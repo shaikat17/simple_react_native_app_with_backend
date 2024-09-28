@@ -11,20 +11,28 @@ const FooterMenu = () => {
   return (
       <View style={styles.container}>
           <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+              <View style={{ alignItems: 'center' }}>
               <FontAwesome5 name='home' style={styles.iconStyle} color={route.name === 'Home' && 'red'} />
-      <Text>Home</Text>
+              <Text>Home</Text>
+              </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Post')}>
-          <FontAwesome5 name='plus-square' style={styles.iconStyle} color={route.name === 'Post' && 'red'} />
-      <Text>Post</Text>
+              <View style={{ alignItems: 'center' }}>
+              <FontAwesome5 name='plus-square' style={styles.iconStyle} color={route.name === 'Post' && 'red'} />
+              <Text>Post</Text>
+              </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('Myposts')}>
-          <FontAwesome5 name='list' style={styles.iconStyle} color={route.name === 'Myposts' && 'red'} />
-      <Text>My Posts</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('MyPosts')}>
+              <View style={{ alignItems: 'center' }}>
+              <FontAwesome5 name='list' style={styles.iconStyle} color={route.name === 'MyPosts' && 'red'} />
+              <Text>My Posts</Text>
+              </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Account')}>
-          <FontAwesome5 name='user' style={styles.iconStyle} color={route.name === 'Account' && 'red'} />
-      <Text>Account</Text>
+              <View style={{ alignItems: 'center' }}>
+              <FontAwesome5 name='user' style={styles.iconStyle} color={route.name === 'Account' && 'red'} />
+              <Text>Account</Text>
+              </View>
     </TouchableOpacity>
     </View>
   )

@@ -1,7 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import { Alert, Modal, StyleSheet, Text, Pressable, View, TextInput, ScrollView } from 'react-native';
+import { Alert, Modal, StyleSheet, Text, Pressable, View, TextInput, ScrollView , Keyboard} from 'react-native';
 import { usePostContext } from '../context/postContext';
 import authFetch from '../utils/authFetch';
+
 
 const EditModal = ({ modalVisible, setModalVisible, post }) => {
   // global state
@@ -19,50 +20,48 @@ const EditModal = ({ modalVisible, setModalVisible, post }) => {
   
   // handle post update submit
   const handlePostUpdateSubmit = async () => {
+    if (!postInformation.title || !postInformation.description) {
+      Alert.alert("All fields must be filled");
+      return;
+    }
+    
     try {
       setLoading(true);
-      if (!postInformation.title || !postInformation.description) {
-        alert("All fields must be filled");
-        setLoading(false);
-        return;
-      }
       const { data } = await authFetch.put(
         `/posts/update-post/${post._id}`,
         postInformation
       );
       setPostStatusUpdate(true);
       setModalVisible(false);
-      alert(data.message);
-      setLoading(false);
+      Alert.alert("Success", data.message);
     } catch (error) {
-      alert(error.response.data.message || error.message);
+      Alert.alert("Error", error.response?.data?.message || error.message);
+    } finally {
       setLoading(false);
-      console.log(error);
+      Keyboard.dismiss(); // Dismiss keyboard on close
     }
-  }
+  };
+
   return (
     <View style={styles.centeredView}>
       <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-          setModalVisible(!modalVisible);
-        }}>
+        onRequestClose={() => setModalVisible(!modalVisible)}>
         <View style={styles.centeredView}>
-                  <ScrollView>
+                  <ScrollView keyboardShouldPersistTaps="handled">
                   <View style={styles.modalView}>
                       <Text style={styles.modalText}>Update Your Post</Text>
                       <Text style={styles.inputTitle}>Title: </Text>
                           <TextInput style={styles.inputBox} value={postInformation.title}
-                      onChangeText={text => setPostInformation(prevState => ({...prevState, title: text}))}    />
+                      onChangeText={text => setPostInformation(prevState => ({...prevState, title: text}))} accessibilityLabel="Post title input"   />
                       <Text style={styles.inputTitle}>Description:</Text>
                           <TextInput style={styles.inputBox}
                           onChangeText={text => setPostInformation(prevState => ({...prevState, description: text}))}
                           value={postInformation.description}
                           multiline={true}
-                      numberOfLines={4} />
+                      numberOfLines={4} accessibilityLabel="Post description input" />
                       <View style={styles.buttonContainer}>
                           {/* for cancel */}
                       <Pressable
@@ -73,7 +72,8 @@ const EditModal = ({ modalVisible, setModalVisible, post }) => {
                           {/* For update content */}
                           <Pressable
               style={[styles.button, { backgroundColor: 'green' }]}
-              onPress={handlePostUpdateSubmit}>
+                  onPress={handlePostUpdateSubmit}
+                disabled={loading}>
               <Text style={styles.textStyle}>Update</Text>
             </Pressable>
             </View>

@@ -1,9 +1,9 @@
 
+import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import colors from 'colors'
 import morgan from 'morgan'
-import express from 'express'
 import connectDB from './config/db.js'
 import authRouter from './routes/authRoutes.js'
 import postRouter from './routes/postRoutes.js'
@@ -25,9 +25,15 @@ app.use(morgan('dev'))
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/posts', postRouter)
 
+// home
+app.get('/', (req, res) => {
+    res.send('Server is running')
+})
 // PORT
 const PORT = process.env.PORT || 8080
 
-app.listen(PORT, () => {
-    console.log('Server is running on port '.bgGreen.white, PORT.bgGreen.white)
-})
+// app.listen(PORT, () => {
+//     console.log('Server is running on port '.bgGreen.white, PORT.bgGreen.white)
+// })
+
+export default app

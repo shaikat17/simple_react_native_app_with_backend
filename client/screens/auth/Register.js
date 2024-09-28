@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, Alert } from "react-native";
+import { View, Text, StyleSheet, Alert } from "react-native";
 import axios from "axios";
 import { useState } from "react";
 import InputField from "../../components/forms/InputField";
@@ -17,30 +17,33 @@ const Register = ({ navigation }) => {
   // functions
 
   const handleSubmit = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
+      // Validation
       if (
         !userInformation.name ||
         !userInformation.email ||
         !userInformation.password
       ) {
-        Alert.alert("Opss!!!", "All field must be filled.");
+        Alert.alert("Oops!!!", "All fields must be filled.");
         setLoading(false);
         return;
       }
-      setLoading(false);
-      const { data } = await axios.post(
-        "http://192.168.1.10:5000/api/v1/auth/register",
-        { ...userInformation }
-      );
-      console.log(data)
-      alert(data && data.message);
-      navigation.navigate('Login')
-    } catch (error) {
 
-      alert(error.response.data.message);
-      setLoading(false);
-      console.log("🚀 ~ handleSubmit ~ error:", error);
+      const { data } = await axios.post(
+        "https://react-native-backend-ten.vercel.app/api/v1/auth/register",
+        userInformation
+      );
+
+      Alert.alert("Success", data.message || "Registration successful.");
+      navigation.navigate('Login');
+    } catch (error) {
+      setLoading(false); // Ensure loading is reset
+      const message = error.response?.data?.message || "An error occurred. Please try again.";
+      Alert.alert("Error", message);
+      console.error("🚀 ~ handleSubmit ~ error:", error);
+    } finally {
+      setLoading(false); // Ensure loading is set to false after operations
     }
   };
 
@@ -49,21 +52,21 @@ const Register = ({ navigation }) => {
       <Text style={styles.Pagetitle}>Register</Text>
       <View style={{ marginHorizontal: 20 }}>
         <InputField
-          lable={"name"}
+          label={"name"}
           keyboardType={"text"}
           autoComplete={"name"}
           value={userInformation.name}
           setValue={setUserInformation}
         />
         <InputField
-          lable={"email"}
+          label={"email"}
           keyboardType={"email-address"}
           autoComplete={"email"}
           value={userInformation.email}
           setValue={setUserInformation}
         />
         <InputField
-          lable={"password"}
+          label={"password"}
           secureTextEntry={true}
           autoComplete={"password"}
           value={userInformation.password}
@@ -84,7 +87,6 @@ const Register = ({ navigation }) => {
           Login
         </Text>
       </Text>
-      {/* <Text>{JSON.stringify(userInformation)}</Text> */}
     </View>
   );
 };

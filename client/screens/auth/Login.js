@@ -5,9 +5,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import InputField from '../../components/forms/InputField';
 import SubmitButton from '../../components/forms/SubmitButton';
 import { useAuthContext } from '../../context/authContext';
+import { usePostContext } from '../../context/postContext';
 const Login = ({ navigation }) => {
   // global state
-  const { state, setState } = useAuthContext()
+  const { setState } = useAuthContext()
+  const { getUserPosts, getPosts } = usePostContext()
     // states
   const [userInformation, setUserInformation] = useState({
     email: "",
@@ -17,33 +19,36 @@ const Login = ({ navigation }) => {
 
     // functions
 
-  const handleSubmit = async () => {
-    try {
+    const handleSubmit = async () => {
       setLoading(true);
-      if (
-        !userInformation.email ||
-        !userInformation.password
-      ) {
-          Alert.alert("Opss!!!", "All field must be filled.");
-          setLoading(false)
-          return
+      try {
+        if (!userInformation.email || !userInformation.password) {
+          Alert.alert("Oops!!!", "All fields must be filled.");
+          setLoading(false);
+          return;
+        }
+  
+        const { data } = await axios.post(
+          "https://react-native-backend-ten.vercel.app/api/v1/auth/login",
+          userInformation
+        );
+  
+        await AsyncStorage.setItem('@auth', JSON.stringify(data));
+        setState(data);
+        getUserPosts();
+        getPosts();
+        
+        Alert.alert("Success", data.message || "Logged in successfully.");
+        navigation.navigate('Home');
+      } catch (error) {
+        setLoading(false);
+        const message = error.response?.data?.message || "An error occurred. Please try again.";
+        Alert.alert("Error", message);
+        console.error("🚀 ~ handleSubmit ~ error:", error);
+      } finally {
+        setLoading(false); // Ensure loading is set to false
       }
-      setLoading(false);
-      const { data } = await axios.post(
-        "http://192.168.1.10:5000/api/v1/auth/login",
-        { ...userInformation }
-      );
-      setState(data)
-      // store on local storage
-      await AsyncStorage.setItem('@auth', JSON.stringify(data))
-      alert(data && data.message);
-      navigation.navigate('Home')
-    } catch (error) {
-      alert(error.response.data.message);
-      setLoading(false);
-      console.log("🚀 ~ handleSubmit ~ error:", error);
-    }
-  };
+    };
     
     
   return (
@@ -52,14 +57,14 @@ const Login = ({ navigation }) => {
       <View style={{ marginHorizontal: 20 }}>
         
         <InputField
-          lable={"email"}
+          label={"email"}
           keyboardType={"email-address"}
           autoComplete={"email"}
           value={userInformation.email}
           setValue={setUserInformation}
         />
         <InputField
-          lable={"password"}
+          label={"password"}
           secureTextEntry={true}
           autoComplete={"password"}
           value={userInformation.password}

@@ -1,12 +1,10 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { View, Text } from "react-native";
 import Home from "../../screens/Home";
 import Register from "../../screens/auth/Register";
 import Login from "../../screens/auth/Login";
 import { useAuthContext } from "../../context/authContext";
 import HeaderMenu from "./HeaderMenu";
 import Post from "../../screens/Post";
-import About from "../../screens/About";
 import Account from "../../screens/Account";
 import MyPosts from "../../screens/MyPosts";
 
@@ -39,14 +37,6 @@ const ScreenMenu = () => {
              }}
           />
           <Stack.Screen
-            name="About"
-            component={About}
-            options={{ 
-              headerBackTitle: 'Back',
-                        headerRight: () => <HeaderMenu />
-             }}
-          />
-          <Stack.Screen
             name="Account"
             component={Account}
             options={{ 
@@ -55,7 +45,7 @@ const ScreenMenu = () => {
              }}
           />
           <Stack.Screen
-            name="Myposts"
+            name="MyPosts"
             component={MyPosts}
             options={{ 
               headerBackTitle: 'Back',

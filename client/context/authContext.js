@@ -1,6 +1,5 @@
 import { createContext, useState, useContext, useEffect } from 'react'
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
 
 
 // context
@@ -17,14 +16,20 @@ const AuthProvider = ({ children }) => {
   
     
     // initial local storage data
-  useEffect(() => {
-    const loadLoaclStorageData = async () => {
-      let data = await AsyncStorage.getItem("@auth");
-      let loginData = JSON.parse(data);
-
-      setState({ ...state, user: loginData?.user, token: loginData?.token });
-    };
-    loadLoaclStorageData();
+    useEffect(() => {
+      const loadLocalStorageData = async () => {
+          try {
+              const data = await AsyncStorage.getItem('@auth');
+              const loginData = JSON.parse(data);
+              
+              if (loginData) {
+                  setState({ user: loginData.user, token: loginData.token });
+              }
+          } catch (error) {
+              console.error("Error loading local storage data:", error);
+          }
+      };
+      loadLocalStorageData();
   }, []);
     
     return <AuthContext.Provider value={{state, setState}}>

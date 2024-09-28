@@ -27,41 +27,39 @@ const Account = () => {
     // update user function
     const handleSubmit = async () => {
         try {
-            setLoading(true);
-    
-            // Validate required fields
-            if (!userInformation.name || !userInformation.email) {
-                alert("Opss!!! All fields must be filled.");
-                setLoading(false);
-                return;
-            }
-            
-            // Make the API request
-            const { data } = await authFetch.post("/auth/update", { ...userInformation });
-            
-            // Check if the response data is valid
-            if (data) {
-                // Optional: stringifying the entire response can be unnecessary
-                let stringifyData = JSON.stringify(data);
-                setState({ ...state, user: data.user || state.user });
-    
-                // Display success message
-                alert(data.message);
-    
-                // Navigate to Home screen
-                navigation.navigate('Home');
-            }
-    
+          setLoading(true);
+          
+          // Validate required fields
+          if (!userInformation.name || !userInformation.email) {
+            alert("Oops!!! All fields must be filled.");
+            return;
+          }
+          
+          // Simple email format validation
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(userInformation.email)) {
+            alert("Please enter a valid email address.");
+            return;
+          }
+          
+          // Make the API request
+          const { data } = await authFetch.post("/auth/update", { ...userInformation });
+          
+          // Check if the response data is valid
+          if (data) {
+            setState({ ...state, user: data.user || state.user });
+            alert(data.message);
+            navigation.navigate('Home');
+          }
         } catch (error) {
-            // Gracefully handle potential errors
-            const errorMessage = error.response?.data?.message || "Something went wrong.";
-            alert(errorMessage);
-            console.log("🚀 ~ handleSubmit Account  ~ error:", error);
+          // Gracefully handle potential errors
+          const errorMessage = error.response?.data?.message || "Something went wrong.";
+          alert(errorMessage);
+          console.log("🚀 ~ handleSubmit Account  ~ error:", error);
         } finally {
-            // Ensure loading is turned off regardless of success or failure
-            setLoading(false);
+          setLoading(false);
         }
-    };
+      };
 
 return (
     <View style={[styles.container, {
@@ -76,7 +74,7 @@ return (
         </View>
         <View style={styles.inputContainer}>
         <InputField
-          lable={"name"}
+          label={"name"}
           keyboardType={"text"}
           autoComplete={"name"}
                     value={userInformation.name}
@@ -84,7 +82,7 @@ return (
                     customStyles={{fontWeight: 'bold', color: 'orange', fontSize: 18, borderColor: 'red', borderWidth: 0.5}}
         />
         <InputField
-          lable={"email"}
+          label={"email"}
           keyboardType={"email-address"}
           autoComplete={"email"}
                     value={userInformation.email}
@@ -92,7 +90,7 @@ return (
                     customStyles={{fontWeight: 'bold', color: 'orange', fontSize: 18, borderColor: 'red', borderWidth: 0.5}}
                 />
                 <InputField
-          lable={"User Role"}
+          label={"User Role"}
           keyboardType={"text"}
                     value={state?.user?.role}
                     editable={false}

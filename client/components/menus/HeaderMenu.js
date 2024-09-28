@@ -1,18 +1,27 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, TouchableOpacity, StyleSheet } from 'react-native'
 import { useAuthContext } from '../../context/authContext'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { usePostContext } from '../../context/postContext';
 
 
 const HeaderMenu = () => {
     // global context
-  const { state, setState } = useAuthContext()
+  const { setState } = useAuthContext()
+  const { setUserPosts, setAllPosts } = usePostContext()
 
     // logout
     const handleLogout = async () => {
-        setState({ token: '', user: null })
-        await AsyncStorage.removeItem('@auth')
-        alert('Logout Successfully.')
+      try {
+        setState({ token: '', user: null });
+        setAllPosts([]);
+        setUserPosts([]);
+        await AsyncStorage.removeItem('@auth');
+        alert('Logout Successfully.');
+      } catch (error) {
+        console.error("Logout error:", error);
+        alert('An error occurred during logout.');
+      }
     }
   return (
     <View>
