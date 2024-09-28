@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Create an axios instance
 const authFetch = axios.create({
-  baseURL: 'http://192.168.1.10:5000/api/v1',
+  baseURL: 'https://react-native-backend-ten.vercel.app/api/v1',
 });
 
 // Function to get the token from AsyncStorage

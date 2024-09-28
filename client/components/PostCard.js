@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Alert, ActivityIndicator, Image } from 'react-native'
+import { View, Text, StyleSheet, Alert, ActivityIndicator, TouchableOpacity, Image } from 'react-native'
 import moment from 'moment'
 import { useState } from 'react'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
@@ -6,6 +6,7 @@ import authFetch from '../utils/authFetch'
 import { usePostContext } from '../context/postContext'
 import EditModal from './EditModal'
 import { useAuthContext } from '../context/authContext'
+import { useNavigation } from '@react-navigation/native'
 
 const PostCard = ({ posts, userPostScreen = false }) => {
     // global state
@@ -16,6 +17,8 @@ const PostCard = ({ posts, userPostScreen = false }) => {
     const [loading, setLoading] = useState(false)
     const [modalVisible, setModalVisible] = useState(false);
   const [singlePost, setSinglePost] = useState({})
+
+  const navigation = useNavigation()
 
     // delete prompt
     const deletePrompt = (id) => {
@@ -69,7 +72,12 @@ const PostCard = ({ posts, userPostScreen = false }) => {
             </View>
           )}
           <Text style={styles.postTitle}>Title: {post.title}</Text>
-          <Text style={styles.postDescription}>{post.description}</Text>
+        <Text style={styles.postDescription}>{post.description.length > 100 ? `${post.description.substring(0, 100)}...` : post.description}
+          
+        </Text>
+        <TouchableOpacity onPress={() => navigation.navigate('FullPost', { post })} style={styles.readMoreButton}>
+                <Text style={styles.readMoreText}>Read More</Text>
+            </TouchableOpacity>
           <View style={styles.postFooter}>
           <View style={styles.footerAuthor}>
             
@@ -180,5 +188,17 @@ const styles = StyleSheet.create({
     editDeleteIcons: {
       flexDirection: 'row',
       justifyContent: 'flex-end',
-    },
+  },
+  readMoreButton: {
+    marginTop: 10,
+    padding: 8,
+    width: 80,
+    backgroundColor: 'red',
+    borderRadius: 5,
+    alignItems: 'center',
+},
+readMoreText: {
+    color: '#fff',
+    fontWeight: 'bold',
+},
   });
