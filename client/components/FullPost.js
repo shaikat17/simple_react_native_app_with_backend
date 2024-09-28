@@ -1,34 +1,25 @@
 import React, { useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import { useAuthContext } from "../context/authContext";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import moment from "moment";
+import Comments from "./Comments";
 
 const FullPost = () => {
-  // global state
   const { state } = useAuthContext();
   const route = useRoute();
-  const { post } = route.params; // Get the post data from params
-
+  const { post } = route.params; 
   const navigation = useNavigation();
 
-  // Set the header title to the post title
   useEffect(() => {
     navigation.setOptions({ title: post.title });
   }, [navigation, post.title]);
 
   return (
-    <ScrollView>
-      <View style={styles.container}>
+    <ScrollView style={styles.container}>
+      <View style={styles.postContent}>
         <Text style={styles.title}>{post.title}</Text>
         <Text style={styles.description}>{post.description}</Text>
 
@@ -55,20 +46,26 @@ const FullPost = () => {
               {moment(post.createdAt).format("DD:MM:YYYY")}
             </Text>
           </View>
-              </View>
-              <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button} >
-                <Text style={{ color: 'white', fontWeight: 'bold' }}>Back to Posts</Text>
-                </TouchableOpacity>
+        </View>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
+          <Text style={{ color: 'white', fontWeight: 'bold' }}>Back to Posts</Text>
+        </TouchableOpacity>
       </View>
+      
+      {/* Comments Section */}
+        <Comments postId={post._id} />
+      
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
     flex: 1,
-        backgroundColor: "white",
+  },
+  postContent: {
+    padding: 10,
+    backgroundColor: "#fff",
     marginHorizontal: 10,
   },
   title: {
@@ -96,8 +93,6 @@ const styles = StyleSheet.create({
   footerAuthor: {
     flexDirection: "row",
     alignItems: "center",
-    borderTopColor: "red",
-    borderTopWidth: 0.5,
     paddingTop: 5,
   },
   iconStyle: {
@@ -112,9 +107,11 @@ const styles = StyleSheet.create({
   footerDate: {
     flexDirection: "row",
     alignItems: "center",
-    borderTopColor: "red",
-    borderTopWidth: 0.5,
     paddingTop: 5,
+  },
+  commentsSection: {
+    marginTop: 20,
+    paddingHorizontal: 10,
   },
 });
 

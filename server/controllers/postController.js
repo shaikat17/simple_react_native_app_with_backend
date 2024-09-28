@@ -156,6 +156,7 @@ const postCommentsController = async (req, res) => {
   try {
     const { postId, comment } = req.body;
     const { userId } = req.user;
+    console.log("🚀 ~ postCommentsController ~ userId:", userId)
 
     if (!comment) {
       return res.status(400).json({
@@ -174,6 +175,7 @@ const postCommentsController = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Comment added successfully",
+      newComment
     })
   } catch (error) {}
 };
@@ -182,7 +184,7 @@ const postCommentsController = async (req, res) => {
 const getCommentsController = async (req, res) => {
   try {
     const { postId } = req.params
-    const comments = await Comment.find({postId}).populate("userId", "name avatar");
+    const comments = await Comment.find({postId}).populate("userId", "name avatar").sort({createdAt: -1});
     res.status(200).json({
       success: true,
       message: "Comments fetched successfully",
