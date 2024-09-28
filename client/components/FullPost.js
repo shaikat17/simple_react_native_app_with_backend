@@ -34,9 +34,9 @@ const FullPost = () => {
 
         <View style={styles.postFooter}>
           <View style={styles.footerAuthor}>
-            {state?.user?.avatar && state?.user?.name === post.author.name ? (
+            {post?.author?.avatar ? (
               <Image
-                source={{ uri: state.user.avatar }}
+                source={{ uri: post.author.avatar }}
                 style={{
                   width: 20,
                   height: 20,

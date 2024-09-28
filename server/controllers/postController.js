@@ -39,7 +39,7 @@ const createPostController = async (req, res) => {
 // get post controller
 const getAllPostController = async (req, res) => {
   try {
-    const posts = await Post.find().populate("author", "_id name").sort({ createdAt: -1 });
+    const posts = await Post.find().populate("author", "_id name avatar").sort({ createdAt: -1 });
     res.status(200).json({
       success: true,
       message: "Posts fetched successfully",
@@ -58,7 +58,7 @@ const getAllPostController = async (req, res) => {
 // get user posts
 const getUserPosts = async (req, res) => {
   try {
-    const posts = await Post.find({ author: req.user.userId }).populate("author", "_id name").sort({ createdAt: -1 });
+    const posts = await Post.find({ author: req.user.userId }).populate("author", "_id name avatar").sort({ createdAt: -1 });
     res.status(200).json({
       success: true,
       message: "Posts fetched successfully",

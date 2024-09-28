@@ -44,7 +44,6 @@ const Login = ({ navigation }) => {
         setLoading(false);
         const message = error.response?.data?.message || "An error occurred. Please try again.";
         Alert.alert("Error", message);
-        console.error("🚀 ~ handleSubmit ~ error:", error);
       } finally {
         setLoading(false); // Ensure loading is set to false
       }
