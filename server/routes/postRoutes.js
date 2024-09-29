@@ -7,7 +7,7 @@ const postRouter = express.Router();
 // routes
 postRouter.post("/create-post", auth, createPostController);
 
-postRouter.get("/get-posts", getAllPostController);
+postRouter.get("/get-posts", auth, getAllPostController);
 
 postRouter.get("/get-user-posts", auth, getUserPosts);
 
@@ -19,6 +19,6 @@ postRouter.post("/add-comment", auth, postCommentsController);
 
 postRouter.get("/get-comments/:postId", getCommentsController);
 
-postRouter.post("/:PostId/like", auth, likePostController);
+postRouter.put("/:postId/like", auth, likePostController);
 
 export default postRouter;

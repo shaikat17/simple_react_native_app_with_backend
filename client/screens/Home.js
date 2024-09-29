@@ -1,4 +1,11 @@
-import { View, StyleSheet, ScrollView, ActivityIndicator, RefreshControl } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  ActivityIndicator,
+  Text,
+  RefreshControl,
+} from "react-native";
 import { useState } from "react";
 import FooterMenu from "../components/menus/FooterMenu";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -19,7 +26,7 @@ const Home = () => {
 
   const insets = useSafeAreaInsets();
 
-  if(!loading && allPosts.length === 0) {
+  if (!loading && allPosts.length === 0) {
     return (
       <View
         style={[
@@ -32,9 +39,12 @@ const Home = () => {
           },
         ]}
       >
-        <View style={styles.emptyContainer}>
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          } >
           <Text style={styles.emptyMessage}>No posts available.</Text>
-        </View>
+        </ScrollView>
       </View>
     );
   }
@@ -51,11 +61,17 @@ const Home = () => {
       ]}
     >
       {loading ? (
-        <ActivityIndicator style={styles.loadingIndicator} size="large" color="#ea2222" />
+        <ActivityIndicator
+          style={styles.loadingIndicator}
+          size="large"
+          color="#ea2222"
+        />
       ) : (
-        <ScrollView refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }>
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
           {allPosts.length > 0 ? (
             <PostCard posts={allPosts} />
           ) : (
@@ -63,11 +79,11 @@ const Home = () => {
               <Text style={styles.emptyMessage}>No posts available.</Text>
             </View>
           )}
-      </ScrollView>
+        </ScrollView>
       )}
-          
-          <View style={styles.footerContainer}>
-          <FooterMenu />
+
+      <View style={styles.footerContainer}>
+        <FooterMenu />
       </View>
     </View>
   );

@@ -13,22 +13,18 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import authFetch from "../utils/authFetch";
 import { usePostContext } from "../context/postContext";
 import EditModal from "./EditModal";
-import { useAuthContext } from "../context/authContext";
 import { useNavigation } from "@react-navigation/native";
+import SinglePost from "./SinglePost";
 
 const PostCard = ({ posts, userPostScreen = false }) => {
-  // global state
   const { setPostStatusUpdate, allPosts, userPosts } = usePostContext();
-  const { state } = useAuthContext();
-
-  // local state
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [singlePost, setSinglePost] = useState({});
-
+  
   const navigation = useNavigation();
 
-  // delete prompt
+  // Delete post prompt
   const deletePrompt = (id) => {
     Alert.alert("Delete Post", "Are you sure you want to delete this post?", [
       {
@@ -39,7 +35,7 @@ const PostCard = ({ posts, userPostScreen = false }) => {
     ]);
   };
 
-  // delete post function
+  // Delete post function
   const handleDeletePost = async (id) => {
     try {
       setLoading(true);
@@ -54,75 +50,9 @@ const PostCard = ({ posts, userPostScreen = false }) => {
     }
   };
 
-  const renderPostCard = (post) => (
-    <View style={styles.card} key={post._id}>
-      {userPostScreen && (
-        <View style={styles.editDeleteIcons}>
-          <FontAwesome5
-            name="pen"
-            style={[styles.iconStyle, { marginRight: 20 }]}
-            onPress={() => {
-              setSinglePost(post);
-              setModalVisible(true);
-            }}
-            accessibilityLabel="Edit post"
-          />
-          <FontAwesome5
-            name="trash"
-            style={styles.iconStyle}
-            onPress={() => deletePrompt(post._id)}
-            accessibilityLabel="Delete post"
-          />
-        </View>
-      )}
-      {!userPostScreen && (
-        <View style={styles.authorContainer}>
-        <Text style={[styles.authorName, {borderBottomColor: "red", borderBottomWidth: 0.5, paddingBottom: 5}]}>Posted By: </Text>
-        <View style={styles.author}>
-        {post?.author?.avatar ? (
-          <Image
-            source={{ uri: post.author.avatar }}
-            style={{ width: 20, height: 20, borderRadius: 25, marginRight: 10 }}
-          />
-        ) : (
-          <FontAwesome5 name="user" style={styles.iconStyle} />
-        )}
-        <Text style={styles.footerAuthorNameDate}>{post.author.name}</Text>
-        </View>
-      </View>
-      )}
-      <Text style={styles.postTitle}>Title: {post.title}</Text>
-      <Text style={styles.postDescription}>
-        {post.description.length > 100
-          ? `${post.description.substring(0, 100)}...`
-          : post.description}
-      </Text>
-      <TouchableOpacity
-        onPress={() => navigation.navigate("FullPost", { post })}
-        style={styles.readMoreButton}
-      >
-        <Text style={styles.readMoreText}>Read More</Text>
-      </TouchableOpacity>
-      <View style={styles.postFooter}>
-        <View style={styles.footerStats}>
-          <FontAwesome5 name="heart" style={styles.iconStyle} />
-          <Text>0 Likes</Text>
-        </View>
-        <View style={styles.footerDate}>
-          <FontAwesome5 name="comment" style={styles.iconStyle} />
-          <Text style={styles.footerAuthorNameDate}>
-            {post.commentsCount} Comments
-          </Text>
-        </View>
-        <View style={styles.footerDate}>
-          <FontAwesome5 name="clock" style={styles.iconStyle} />
-          <Text style={styles.footerAuthorNameDate}>
-            {moment(post.createdAt).format("DD:MM:YYYY")}
-          </Text>
-        </View>
-      </View>
-    </View>
-  );
+
+
+  
 
   return (
     <View>
@@ -140,11 +70,14 @@ const PostCard = ({ posts, userPostScreen = false }) => {
       {loading ? (
         <ActivityIndicator size="large" color="#ea2222" />
       ) : (
-        posts?.map(renderPostCard)
+        posts?.map((post) => (
+          <SinglePost key={post._id} post={post} setModalVisible={setModalVisible} setSinglePost={setSinglePost} userPostScreen={userPostScreen} />
+        ))
       )}
     </View>
   );
 };
+
 export default PostCard;
 
 const styles = StyleSheet.create({

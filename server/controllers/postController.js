@@ -69,6 +69,19 @@ const getAllPostController = async (req, res) => {
           preserveNullAndEmptyArrays: true, // Optional: keeps posts without authors
         },
       },
+      // Add total like and isLikedByUser fields
+      {
+        $addFields: {
+          likes: { $size: { $ifNull: ["$likes", []] } },
+          totalLikes: { $size: { $ifNull: ["$likes", []] } },
+          isLikedByUser: {
+            $in: [
+              new mongoose.Types.ObjectId(req.user.userId),
+              { $ifNull: ["$likes", []] },
+            ],
+          },
+        },
+      },
       {
         $project: {
           comments: 0, // Exclude the full comments array
@@ -95,7 +108,6 @@ const getAllPostController = async (req, res) => {
     });
   }
 };
-
 
 // get user posts
 const getUserPosts = async (req, res) => {
@@ -159,7 +171,6 @@ const getUserPosts = async (req, res) => {
     });
   }
 };
-
 
 // delete post controller
 const deletePostController = async (req, res) => {
@@ -239,7 +250,7 @@ const postCommentsController = async (req, res) => {
   try {
     const { postId, comment } = req.body;
     const { userId } = req.user;
-    console.log("🚀 ~ postCommentsController ~ userId:", userId)
+    console.log("🚀 ~ postCommentsController ~ userId:", userId);
 
     if (!comment) {
       return res.status(400).json({
@@ -258,16 +269,18 @@ const postCommentsController = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Comment added successfully",
-      newComment
-    })
+      newComment,
+    });
   } catch (error) {}
 };
 
 // get comments
 const getCommentsController = async (req, res) => {
   try {
-    const { postId } = req.params
-    const comments = await Comment.find({postId}).populate("userId", "name avatar").sort({createdAt: -1});
+    const { postId } = req.params;
+    const comments = await Comment.find({ postId })
+      .populate("userId", "name avatar")
+      .sort({ createdAt: -1 });
     res.status(200).json({
       success: true,
       message: "Comments fetched successfully",
@@ -285,10 +298,12 @@ const getCommentsController = async (req, res) => {
 
 // like on post controller
 const likePostController = async (req, res) => {
+  
   try {
     const { postId } = req.params;
     const { userId } = req.user;
     const post = await Post.findById(postId);
+
     if (!post) {
       return res.status(404).json({
         success: false,
@@ -296,23 +311,28 @@ const likePostController = async (req, res) => {
       });
     }
 
-    const isLiked = post.likes.get(userId);
+    const isLiked = post.likes.includes(userId);
+    
+
     if (isLiked) {
       post.likes.pull(userId);
     } else {
-      post.likes.push(userId, true);
+      post.likes.push(userId);
     }
-    
+
     await post.save();
-    res.status(200).json({
+
+    
+    return res.status(200).json({
       success: true,
       message: isLiked ? "Disliked post" : "Liked post",
+      totalLikes: post.likes.length,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "Internal server error",
-    })
+    });
   }
 };
 
