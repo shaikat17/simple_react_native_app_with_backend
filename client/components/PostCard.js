@@ -90,7 +90,11 @@ const PostCard = ({ posts, userPostScreen = false }) => {
               <FontAwesome5 name='user' style={styles.iconStyle} />
               )}
               <Text style={styles.footerAuthorNameDate}>{post.author.name}</Text>
-            </View>
+          </View>
+          <View style={styles.footerDate}>
+            <FontAwesome5 name='comment' style={styles.iconStyle} />
+            <Text style={styles.footerAuthorNameDate}>{post.commentsCount} Comments</Text>
+          </View>
             <View style={styles.footerDate}>
               <FontAwesome5 name='clock' style={styles.iconStyle} />
               <Text style={styles.footerAuthorNameDate}>

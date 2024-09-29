@@ -1,5 +1,6 @@
 import { Post } from "../models/postModel.js";
 import Comment from "../models/commentModel.js";
+import mongoose from "mongoose";
 
 const createPostController = async (req, res) => {
   try {
@@ -99,16 +100,58 @@ const getAllPostController = async (req, res) => {
 // get user posts
 const getUserPosts = async (req, res) => {
   try {
-    const posts = await Post.find({ author: req.user.userId })
-      .populate("author", "_id name avatar")
-      .sort({ createdAt: -1 });
+    const posts = await Post.aggregate([
+      {
+        $match: {
+          author: new mongoose.Types.ObjectId(req.user.userId),
+        },
+      },
+      {
+        $lookup: {
+          from: "comments", // Name of the comments collection
+          localField: "_id", // Field from the posts collection
+          foreignField: "postId", // Field from the comments collection
+          as: "comments", // Name of the new field to create
+        },
+      },
+      {
+        $addFields: {
+          commentsCount: { $size: "$comments" }, // Add a new field with the count of comments
+        },
+      },
+      {
+        $lookup: {
+          from: "users", // Name of the users collection
+          localField: "author", // Field from the posts collection (author ID)
+          foreignField: "_id", // Field from the users collection
+          as: "author", // Name of the new field to create
+        },
+      },
+      {
+        $unwind: {
+          path: "$author", // Unwind the author array to get a single author object
+          preserveNullAndEmptyArrays: true, // Optional: keeps posts without authors
+        },
+      },
+      {
+        $project: {
+          comments: 0, // Exclude the full comments array
+          "author.password": 0, // Exclude sensitive fields, like password
+          "author.__v": 0, // Exclude version key if using Mongoose
+        },
+      },
+      {
+        $sort: { createdAt: -1 }, // Sort by createdAt field
+      },
+    ]);
+
     res.status(200).json({
       success: true,
       message: "Posts fetched successfully",
       posts,
     });
   } catch (error) {
-    console.log("🚀 ~ getPostController ~ error:", error);
+    console.log("🚀 ~ getUserPosts ~ error:", error);
     return res.status(500).json({
       success: false,
       message: "Internal server error",
@@ -116,6 +159,7 @@ const getUserPosts = async (req, res) => {
     });
   }
 };
+
 
 // delete post controller
 const deletePostController = async (req, res) => {
