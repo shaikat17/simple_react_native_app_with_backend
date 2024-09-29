@@ -1,5 +1,5 @@
 import express from "express";
-import { createPostController, deletePostController, getAllPostController, getCommentsController, getUserPosts, postCommentsController, updatePostController } from "../controllers/postController.js";
+import { createPostController, deletePostController, getAllPostController, getCommentsController, getUserPosts, likePostController, postCommentsController, updatePostController } from "../controllers/postController.js";
 import { auth } from "../helpers/jwt.js";
 
 const postRouter = express.Router();
@@ -19,5 +19,6 @@ postRouter.post("/add-comment", auth, postCommentsController);
 
 postRouter.get("/get-comments/:postId", getCommentsController);
 
+postRouter.post("/:PostId/like", auth, likePostController);
 
 export default postRouter;

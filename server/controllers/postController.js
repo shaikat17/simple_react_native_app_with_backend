@@ -234,6 +234,7 @@ const updatePostController = async (req, res) => {
   }
 };
 
+// post comments
 const postCommentsController = async (req, res) => {
   try {
     const { postId, comment } = req.body;
@@ -282,6 +283,39 @@ const getCommentsController = async (req, res) => {
   }
 };
 
+// like on post controller
+const likePostController = async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const { userId } = req.user;
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: "Post not found",
+      });
+    }
+
+    const isLiked = post.likes.get(userId);
+    if (isLiked) {
+      post.likes.pull(userId);
+    } else {
+      post.likes.push(userId, true);
+    }
+    
+    await post.save();
+    res.status(200).json({
+      success: true,
+      message: isLiked ? "Disliked post" : "Liked post",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    })
+  }
+};
+
 export {
   createPostController,
   getAllPostController,
@@ -290,4 +324,5 @@ export {
   updatePostController,
   postCommentsController,
   getCommentsController,
+  likePostController,
 };
