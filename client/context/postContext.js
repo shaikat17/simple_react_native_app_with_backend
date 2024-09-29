@@ -23,7 +23,7 @@ export const PostProvider = ({ children }) => {
     const getPosts = async () => {
         setLoading(true);
         try {
-            const { data } = await axios.get('http://192.168.1.10:5000/api/v1/posts/get-posts');
+            const { data } = await axios.get('https://react-native-backend-ten.vercel.app/api/v1/posts/get-posts');
             setAllPosts(data?.posts);
         } catch (error) {
             console.log(error);

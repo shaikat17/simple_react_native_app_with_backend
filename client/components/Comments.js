@@ -25,7 +25,7 @@ const Comments = ({ postId }) => {
       try {
         setLoading(true);
       const { data } = await axios.get(
-        `http://192.168.1.10:5000/api/v1/posts/get-comments/${postId}`
+        `https://react-native-backend-ten.vercel.app/api/v1/posts/get-comments/${postId}`
       );
       setComments(data.comments);
     } catch (error) {

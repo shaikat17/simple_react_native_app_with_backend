@@ -6,6 +6,7 @@ import { useAuthContext } from "../context/authContext";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import moment from "moment";
 import Comments from "./Comments";
+import FooterMenu from "./menus/FooterMenu";
 
 const FullPost = () => {
   const { state } = useAuthContext();
@@ -18,7 +19,8 @@ const FullPost = () => {
   }, [navigation, post.title]);
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={{ flex: 1 }}>
+      <ScrollView style={styles.container}>
       <View style={styles.postContent}>
         <Text style={styles.title}>{post.title}</Text>
         <Text style={styles.description}>{post.description}</Text>
@@ -56,6 +58,8 @@ const FullPost = () => {
         <Comments postId={post._id} />
       
     </ScrollView>
+      <FooterMenu />
+    </View>
   );
 };
 

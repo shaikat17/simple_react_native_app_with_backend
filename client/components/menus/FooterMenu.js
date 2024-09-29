@@ -46,7 +46,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         borderTopColor: 'red',
         borderTopWidth: 0.5,
-        paddingTop: 5
+        paddingTop: 5,
+        backgroundColor: 'white',
+        padding: 10
     },
     iconStyle: {
         marginBottom: 3,
